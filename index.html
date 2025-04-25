@@ -529,3 +529,453 @@
                     rating: 4.4,
                     reviews: 542,
                     departure: "Milano Malpensa",
+                    arrival: "Berlino Brandenburg",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "16:45",
+                    arrivalTime: "19:30",
+                    features: ["Economy", "Bagaglio a mano", "Snack", "Intrattenimento"]
+                },
+                {
+                    id: 4,
+                    name: "LH8765",
+                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
+                    price: 349,
+                    rating: 4.9,
+                    reviews: 1024,
+                    departure: "Milano Malpensa",
+                    arrival: "Berlino Brandenburg",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "18:30",
+                    arrivalTime: "20:20",
+                    features: ["Business", "Bagaglio a mano", "Bagaglio da stiva 32kg", "Menu gourmet", "Lounge access"]
+                }
+            ]
+        };
+        
+        // DOM elements
+        const serviceTabs = document.querySelectorAll('.service-tab');
+        const serviceIcon = document.getElementById('service-icon');
+        const searchTitle = document.getElementById('search-title');
+        const aiPrompt = document.getElementById('aiPrompt');
+        const searchButton = document.getElementById('searchButton');
+        const loading = document.getElementById('loading');
+        const aiSuggestion = document.getElementById('aiSuggestion');
+        const aiUnderstanding = document.getElementById('aiUnderstanding');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsTitle = document.getElementById('results-title');
+        const resultsList = document.getElementById('results-list');
+        const initialMessage = document.getElementById('initialMessage');
+        const paymentModal = document.getElementById('paymentModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modal-title');
+        const itemDetails = document.getElementById('itemDetails');
+        const basePrice = document.getElementById('basePrice');
+        const taxes = document.getElementById('taxes');
+        const totalPrice = document.getElementById('totalPrice');
+        const priceLabel = document.getElementById('price-label');
+        const taxLabel = document.getElementById('tax-label');
+        const taxContainer = document.getElementById('tax-container');
+        const confirmButton = document.getElementById('confirmButton');
+        const paypalButton = document.getElementById('paypalButton');
+        const creditCardButton = document.getElementById('creditCardButton');
+        
+        // Set up event listeners
+        serviceTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Get service name from tab id
+                const service = this.id.replace('-tab', '');
+                
+                // Update current service
+                currentService = service;
+                
+                // Reset UI
+                resetUI();
+                
+                // Update UI for selected service
+                updateServiceUI(service);
+                
+                // Mark this tab as active
+                serviceTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                this.classList.add(`${service}-bg`);
+            });
+        });
+        
+        searchButton.addEventListener('click', function() {
+            // Simulate AI analysis
+            simulateAISearch();
+        });
+        
+        closeModal.addEventListener('click', function() {
+            paymentModal.classList.add('hidden');
+        });
+        
+        paypalButton.addEventListener('click', function() {
+            // Toggle selected payment method
+            this.classList.add('bg-[#0070BA]', 'text-white');
+            this.classList.remove('hover:bg-gray-50', 'bg-white');
+            creditCardButton.classList.remove('bg-blue-600', 'text-white');
+            creditCardButton.classList.add('hover:bg-gray-50', 'bg-white');
+        });
+        
+        creditCardButton.addEventListener('click', function() {
+            // Toggle selected payment method
+            this.classList.add('bg-blue-600', 'text-white');
+            this.classList.remove('hover:bg-gray-50', 'bg-white');
+            paypalButton.classList.remove('bg-[#0070BA]', 'text-white');
+            paypalButton.classList.add('hover:bg-gray-50', 'bg-white');
+        });
+        
+        confirmButton.addEventListener('click', function() {
+            // Simulate payment confirmation
+            paymentModal.classList.add('hidden');
+            
+            // Show confirmation message
+            alert('Ordine confermato con successo! Riceverai una conferma via email.');
+        });
+        
+        // Functions
+        function updateServiceUI(service) {
+            // Update icon
+            serviceIcon.className = '';
+            serviceIcon.classList.add(serviceConfig[service].icon, `${service}-color`, 'text-5xl');
+            
+            // Update title
+            searchTitle.textContent = serviceConfig[service].title;
+            
+            // Update placeholder
+            aiPrompt.placeholder = serviceConfig[service].promptPlaceholder;
+            
+            // Update search button
+            searchButton.classList.remove('bg-[#FF5A5F]', 'bg-[#FF9900]', 'bg-[#00A082]', 'bg-[#CC0033]', 'bg-[#05164D]');
+            searchButton.classList.add(`bg-[${serviceConfig[service].color}]`);
+        }
+        
+        function resetUI() {
+            // Clear AI suggestion
+            aiSuggestion.classList.add('hidden');
+            aiUnderstanding.textContent = '';
+            
+            // Hide results
+            resultsContainer.classList.add('hidden');
+            resultsList.innerHTML = '';
+            
+            // Show initial message
+            initialMessage.classList.remove('hidden');
+            
+            // Clear prompt
+            aiPrompt.value = '';
+        }
+        
+        function simulateAISearch() {
+            // Show loading
+            loading.classList.remove('hidden');
+            
+            // Hide initial message
+            initialMessage.classList.add('hidden');
+            
+            // Simulate API delay
+            setTimeout(() => {
+                // Hide loading
+                loading.classList.add('hidden');
+                
+                // Show AI suggestion
+                aiSuggestion.classList.remove('hidden');
+                
+                // Parse user request (simplified for demo)
+                const userRequest = aiPrompt.value || "Richiesta generica";
+                
+                // Generate understanding based on service
+                let understanding;
+                switch(currentService) {
+                    case 'airbnb':
+                        understanding = "Stai cercando un alloggio a Firenze in zona centrale per 2 persone con terrazza.";
+                        break;
+                    case 'amazon':
+                        understanding = "Stai cercando un laptop per lavoro grafico con budget massimo di 1000€ e SSD capiente.";
+                        break;
+                    case 'glovo':
+                        understanding = "Vuoi ordinare una pizza margherita e un tiramisù con consegna entro un'ora.";
+                        break;
+                    case 'frecciarossa':
+                        understanding = "Cerchi un treno da Milano a Roma per domani mattina in prima classe.";
+                        break;
+                    case 'lufthansa':
+                        understanding = "Stai cercando un volo Milano-Berlino per il prossimo weekend con bagaglio a mano.";
+                        break;
+                    default:
+                        understanding = "Ho analizzato la tua richiesta.";
+                }
+                aiUnderstanding.textContent = understanding;
+                
+                // Show results
+                showResults();
+                
+            }, 1500);
+        }
+        
+        function showResults() {
+            // Update results title
+            resultsTitle.textContent = serviceConfig[currentService].resultTitle;
+            
+            // Show results container
+            resultsContainer.classList.remove('hidden');
+            
+            // Get mock data for current service
+            const serviceData = mockData[currentService];
+            
+            // Clear previous results
+            resultsList.innerHTML = '';
+            
+            // Add results
+            serviceData.forEach(item => {
+                const resultCard = createResultCard(item);
+                resultsList.appendChild(resultCard);
+            });
+        }
+        
+        function createResultCard(item) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all';
+            
+            // Determine item specific content
+            let specificContent = '';
+            let itemFeatures = '';
+            
+            if (item.features && Array.isArray(item.features)) {
+                itemFeatures = `
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        ${item.features.map(feature => `
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">${feature}</span>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            switch(currentService) {
+                case 'airbnb':
+                    specificContent = `
+                        <div class="text-sm text-gray-600 mt-1">
+                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.location}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-user mr-1"></i> Host: ${item.host}
+                        </div>
+                    `;
+                    break;
+                case 'amazon':
+                    specificContent = `
+                        <div class="text-sm text-gray-600 mt-1">
+                            <i class="fas fa-store mr-1"></i> Venditore: ${item.seller}
+                        </div>
+                    `;
+                    break;
+                case 'glovo':
+                    specificContent = `
+                        <div class="text-sm text-gray-600 mt-1">
+                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.location}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-clock mr-1"></i> Consegna: ${item.deliveryTime}
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-sm font-semibold">Menu: </span>
+                            <span class="text-sm text-gray-600">${item.menu.slice(0, 3).join(', ')}${item.menu.length > 3 ? '...' : ''}</span>
+                        </div>
+                    `;
+                    break;
+                case 'frecciarossa':
+                case 'lufthansa':
+                    specificContent = `
+                        <div class="text-sm text-gray-600 mt-1">
+                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.departure} → ${item.arrival}
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-clock mr-1"></i> ${item.departureTime} - ${item.arrivalTime}
+                        </div>
+                    `;
+                    break;
+            }
+            
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold">${item.name}</h3>
+                    <div class="flex items-center mt-1 mb-2">
+                        <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                        <span class="font-medium">${item.rating}</span>
+                        <span class="text-gray-400 text-sm ml-1">(${item.reviews})</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">${item.description}</p>
+                    
+                    ${specificContent}
+                    
+                    ${itemFeatures}
+                    
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-xl font-bold">${item.price}€</span>
+                        <button class="book-button px-4 py-2 rounded-lg text-white font-medium" 
+                                style="background-color: ${serviceConfig[currentService].color}"
+                                data-id="${item.id}">
+                            ${currentService === 'amazon' ? 'Acquista' : 'Prenota'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listener to book button
+            const bookButton = card.querySelector('.book-button');
+            bookButton.addEventListener('click', function() {
+                openPaymentModal(item);
+            });
+            
+            return card;
+        }
+        
+        function openPaymentModal(item) {
+            // Update modal title
+            modalTitle.textContent = serviceConfig[currentService].modalTitle;
+            
+            // Calculate prices
+            const tax = Math.round(item.price * 0.12);
+            const total = item.price + (serviceConfig[currentService].showTax ? tax : 0);
+            
+            // Update price labels
+            priceLabel.textContent = serviceConfig[currentService].priceLabel;
+            taxLabel.textContent = serviceConfig[currentService].taxLabel;
+            
+            // Show/hide tax container
+            if (serviceConfig[currentService].showTax) {
+                taxContainer.classList.remove('hidden');
+            } else {
+                taxContainer.classList.add('hidden');
+            }
+            
+            // Update prices
+            basePrice.textContent = `${item.price}€`;
+            taxes.textContent = `${tax}€`;
+            totalPrice.textContent = `${total}€`;
+            
+            // Update item details
+            let detailsContent = '';
+            
+            switch(currentService) {
+                case 'airbnb':
+                    detailsContent = `
+                        <div class="flex items-start">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <p class="text-sm text-gray-600">${item.location}</p>
+                                <p class="text-sm text-gray-600">Host: ${item.host}</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-semibold">Date:</p>
+                            <p class="text-sm text-gray-600">Check-in: 01/05/2025 - Check-out: 03/05/2025</p>
+                        </div>
+                    `;
+                    break;
+                case 'amazon':
+                    detailsContent = `
+                        <div class="flex items-start">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <p class="text-sm text-gray-600">Venditore: ${item.seller}</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-semibold">Consegna stimata:</p>
+                            <p class="text-sm text-gray-600">Entro 2-3 giorni lavorativi</p>
+                        </div>
+                    `;
+                    break;
+                case 'glovo':
+                    detailsContent = `
+                        <div class="flex items-start">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <p class="text-sm text-gray-600">${item.location}</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-semibold">Consegna stimata:</p>
+                            <p class="text-sm text-gray-600">${item.deliveryTime}</p>
+                            <p class="text-sm font-semibold mt-2">Ordine:</p>
+                            <p class="text-sm text-gray-600">${item.menu.slice(0, 3).join(', ')}</p>
+                        </div>
+                    `;
+                    break;
+                case 'frecciarossa':
+                    detailsContent = `
+                        <div class="flex items-start">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <p class="text-sm text-gray-600">${item.departure} → ${item.arrival}</p>
+                                <p class="text-sm text-gray-600">${item.departureTime} - ${item.arrivalTime}</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-semibold">Data:</p>
+                            <p class="text-sm text-gray-600">01/05/2025</p>
+                            <p class="text-sm font-semibold mt-2">Passeggeri:</p>
+                            <p class="text-sm text-gray-600">1 adulto</p>
+                        </div>
+                    `;
+                    break;
+                case 'lufthansa':
+                    detailsContent = `
+                        <div class="flex items-start">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                            <div>
+                                <h4 class="font-semibold">${item.name}</h4>
+                                <p class="text-sm text-gray-600">${item.departure} → ${item.arrival}</p>
+                                <p class="text-sm text-gray-600">${item.departureTime} - ${item.arrivalTime}</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
+                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-semibold">Data:</p>
+                            <p class="text-sm text-gray-600">01/05/2025</p>
+                            <p class="text-sm font-semibold mt-2">Passeggeri:</p>
+                            <p class="text-sm text-gray-600">1 adulto</p>
+                            <p class="text-sm font-semibold mt-2">Bagaglio:</p>
+                            <p class="text-sm text-gray-600">1 bagaglio a mano</p>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            itemDetails.innerHTML = detailsContent;
+            
+            // Show modal
+            paymentModal.classList.remove('hidden');
+        }
+        
+        // Initialize the UI with the default service (airbnb)
+        updateServiceUI(currentService);
+    </script>
+</body>
+</html>

@@ -112,7 +112,7 @@
             color: #5af;
         }
         
-        select, input {
+        select {
             background-color: rgba(10, 20, 40, 0.8);
             color: #acf;
             border: 1px solid #5af;
@@ -182,6 +182,25 @@
             75% { content: "..."; }
             100% { content: ""; }
         }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .status-online {
+            background-color: #4f9;
+            box-shadow: 0 0 8px #4f9;
+        }
+        
+        .status-offline {
+            background-color: #f55;
+            box-shadow: 0 0 8px #f55;
+        }
     </style>
 </head>
 <body>
@@ -199,7 +218,7 @@
     
     <div class="main-container">
         <div class="response-area" id="response-area">
-            <p>Computer di bordo in attesa. In cosa posso assisterti?</p>
+            <p><span class="status-indicator status-online"></span> Computer di bordo attivo e pronto. In cosa posso assisterti?</p>
         </div>
         
         <div class="input-container">
@@ -209,9 +228,6 @@
         </div>
         
         <div class="settings">
-            <label for="api-key">Chiave API:</label>
-            <input type="password" id="api-key" placeholder="Inserisci la tua chiave API OpenAI">
-            
             <label for="model">Modello:</label>
             <select id="model">
                 <option value="gpt-4-turbo">GPT-4 Turbo</option>
@@ -226,11 +242,22 @@
                 <option value="spock">Spock</option>
                 <option value="picard">Capitano Picard</option>
             </select>
+            
+            <span id="api-status"><span class="status-indicator status-online"></span> API configurata</span>
         </div>
     </div>
 
     <script>
+        // INSERISCI LA TUA CHIAVE API QUI
+        const OPENAI_API_KEY = "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";
+        
         document.addEventListener('DOMContentLoaded', function() {
+            // Verifica la chiave API
+            if (!OPENAI_API_KEY || OPENAI_API_KEY === "sk-tuaChiaveAPIQui") {
+                document.getElementById('api-status').innerHTML = 
+                    '<span class="status-indicator status-offline"></span> <strong>ATTENZIONE:</strong> Chiave API non configurata. Modifica il codice per inserire la tua chiave API OpenAI.';
+            }
+            
             // Crea effetto spaziale con stelle
             const warpField = document.getElementById('warp-field');
             for (let i = 0; i < 100; i++) {
@@ -255,28 +282,17 @@
             const userInput = document.getElementById('user-input');
             const sendBtn = document.getElementById('send-btn');
             const voiceBtn = document.getElementById('voice-btn');
-            const apiKeyInput = document.getElementById('api-key');
             const modelSelect = document.getElementById('model');
-            
-            // Verifica se c'è una chiave API salvata
-            const savedApiKey = localStorage.getItem('openai_api_key');
-            if (savedApiKey) {
-                apiKeyInput.value = savedApiKey;
-            }
             
             // Funzione per inviare il messaggio all'API di OpenAI
             async function sendMessage() {
                 const message = userInput.value.trim();
                 if (!message) return;
                 
-                const apiKey = apiKeyInput.value.trim();
-                if (!apiKey) {
-                    addResponse("Errore: È necessario inserire una chiave API valida.");
+                if (!OPENAI_API_KEY || OPENAI_API_KEY === "sk-tuaChiaveAPIQui") {
+                    addResponse("Errore: È necessario configurare una chiave API valida nel codice.");
                     return;
                 }
-                
-                // Salva la chiave API
-                localStorage.setItem('openai_api_key', apiKey);
                 
                 // Aggiungi il messaggio dell'utente
                 addResponse(`<strong>Tu:</strong> ${message}`, false);
@@ -298,7 +314,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
+                            'Authorization': `Bearer ${OPENAI_API_KEY}`
                         },
                         body: JSON.stringify({
                             model: model,
@@ -332,6 +348,9 @@
                     
                     // Sintesi vocale (se supportata dal browser)
                     speakResponse(aiResponse);
+                    
+                    // Effetto sonoro
+                    playComputerSound();
                     
                 } catch (error) {
                     responseArea.removeChild(typingIndicator);
@@ -407,13 +426,15 @@
                     }
                     
                     // Prova a trovare una voce femminile per il computer
-                    const voices = speechSynthesis.getVoices();
-                    if (voiceMode === 'computer') {
-                        const femaleVoice = voices.find(voice => voice.name.includes('female') || voice.name.includes('Female'));
-                        if (femaleVoice) utterance.voice = femaleVoice;
-                    }
+                    window.speechSynthesis.onvoiceschanged = () => {
+                        const voices = window.speechSynthesis.getVoices();
+                        if (voiceMode === 'computer') {
+                            const femaleVoice = voices.find(voice => voice.name.includes('female') || voice.name.includes('Female'));
+                            if (femaleVoice) utterance.voice = femaleVoice;
+                        }
+                    };
                     
-                    speechSynthesis.speak(utterance);
+                    window.speechSynthesis.speak(utterance);
                 }
             }
             
@@ -428,6 +449,7 @@
                 recognition.lang = 'it-IT';
                 recognition.interimResults = false;
                 
+                playBeepSound(true); // Suono di attivazione
                 addResponse(`<em>In ascolto... Parla ora.</em>`, false);
                 
                 recognition.onresult = function(event) {
@@ -444,23 +466,44 @@
                 recognition.start();
             }
             
-            // Event Listeners
-            sendBtn.addEventListener('click', sendMessage);
-            voiceBtn.addEventListener('click', startVoiceRecognition);
-            
-            userInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    sendMessage();
+            // Effetti sonori
+            function playBeepSound(isActivation = false) {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                if (isActivation) {
+                    // Suono di attivazione vocale
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1760, audioContext.currentTime + 0.1);
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                } else {
+                    // Beep standard
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.2);
                 }
-            });
-            
-            // Precarica le voci disponibili
-            if ('speechSynthesis' in window) {
-                speechSynthesis.getVoices();
             }
             
-            // Effetto sonoro iniziale
-            setTimeout(() => {
+            function playComputerSound() {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
@@ -477,7 +520,25 @@
                 
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.3);
-            }, 1000);
+            }
+            
+            // Event Listeners
+            sendBtn.addEventListener('click', sendMessage);
+            voiceBtn.addEventListener('click', startVoiceRecognition);
+            
+            userInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Precarica le voci disponibili
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
+            
+            // Effetto sonoro iniziale
+            setTimeout(playComputerSound, 1000);
         });
     </script>
 </body>

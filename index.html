@@ -10,11 +10,7 @@
             color: #acf;
             font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            padding: 20px;
         }
         
         .header {
@@ -22,6 +18,7 @@
             padding: 15px;
             text-align: center;
             border-bottom: 2px solid #5af;
+            margin-bottom: 20px;
         }
         
         h1 {
@@ -31,56 +28,31 @@
             letter-spacing: 3px;
         }
         
-        .starfleet-logo {
-            width: 50px;
-            height: 50px;
-            display: inline-block;
-            margin-right: 15px;
-            vertical-align: middle;
-        }
-        
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            padding: 20px;
-            overflow: hidden;
-        }
-        
         .response-area {
-            flex: 1;
             background-color: rgba(20, 40, 80, 0.3);
             border: 1px solid #5af;
             border-radius: 5px;
             padding: 15px;
             margin-bottom: 20px;
+            min-height: 200px;
+            max-height: 400px;
             overflow-y: auto;
-            font-size: 16px;
-            line-height: 1.5;
         }
         
         .input-container {
             display: flex;
-            background-color: rgba(20, 40, 80, 0.3);
-            border: 1px solid #5af;
-            border-radius: 5px;
-            padding: 10px;
+            margin-bottom: 20px;
         }
         
         #user-input {
             flex: 1;
             background-color: rgba(10, 20, 40, 0.8);
             color: #acf;
-            border: none;
+            border: 1px solid #5af;
             border-radius: 3px;
             padding: 10px;
             font-size: 16px;
             margin-right: 10px;
-        }
-        
-        #user-input:focus {
-            outline: none;
-            box-shadow: 0 0 5px #5af;
         }
         
         button {
@@ -91,237 +63,127 @@
             padding: 0 15px;
             cursor: pointer;
             font-weight: bold;
-            letter-spacing: 1px;
-            transition: background-color 0.3s;
         }
         
-        button:hover {
-            background-color: #345;
-        }
-        
-        .settings {
-            margin-top: 20px;
+        .debug-info {
             background-color: rgba(20, 40, 80, 0.3);
             border: 1px solid #5af;
             border-radius: 5px;
-            padding: 15px;
+            padding: I15px;
+            margin-top: 20px;
+            display: none;
         }
         
-        label {
-            margin-right: 15px;
-            color: #5af;
-        }
-        
-        select {
-            background-color: rgba(10, 20, 40, 0.8);
-            color: #acf;
-            border: 1px solid #5af;
-            border-radius: 3px;
-            padding: 5px 10px;
-            margin-right: 15px;
-        }
-        
-        .blinking-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background-color: #5af;
-            animation: blink 1s infinite;
-            margin-left: 3px;
-            vertical-align: middle;
-        }
-        
-        @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-        
-        .typing {
-            color: #5af;
-            font-style: italic;
-        }
-        
-        .lcars-bar {
-            height: 10px;
-            background: linear-gradient(to right, #5af, #f55, #ff5, #5af);
-            margin: 5px 0;
-        }
-        
-        .warp-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.1;
-        }
-        
-        .star {
-            position: absolute;
-            background-color: #fff;
-            width: 2px;
-            height: 2px;
-        }
-        
-        .processing {
-            display: inline-block;
-            margin-left: 10px;
-        }
-        
-        .processing::after {
-            content: "";
-            animation: processingDots 1.5s infinite;
-        }
-        
-        @keyframes processingDots {
-            0% { content: ""; }
-            25% { content: "."; }
-            50% { content: ".."; }
-            75% { content: "..."; }
-            100% { content: ""; }
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        
-        .status-online {
-            background-color: #4f9;
-            box-shadow: 0 0 8px #4f9;
-        }
-        
-        .status-offline {
-            background-color: #f55;
-            box-shadow: 0 0 8px #f55;
+        .show-debug {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="warp-effect" id="warp-field"></div>
-    
     <div class="header">
-        <div class="lcars-bar"></div>
-        <svg class="starfleet-logo" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="#123" stroke="#5af" stroke-width="2"/>
-            <path d="M50 10 L50 90 M10 50 L90 50 M25 25 L75 75 M25 75 L75 25" stroke="#5af" stroke-width="2" fill="none"/>
-        </svg>
-        <h1>Computer di Bordo Federation</h1>
-        <div class="lcars-bar"></div>
+        <h1>Computer di Bordo Star Trek</h1>
     </div>
     
-    <div class="main-container">
-        <div class="response-area" id="response-area">
-            <p><span class="status-indicator status-online"></span> Computer di bordo attivo e pronto. In cosa posso assisterti?</p>
-        </div>
-        
-        <div class="input-container">
-            <input type="text" id="user-input" placeholder="Inserisci il comando..." autofocus>
-            <button id="send-btn">INVIA</button>
-            <button id="voice-btn">VOCE</button>
-        </div>
-        
-        <div class="settings">
-            <label for="model">Modello:</label>
-            <select id="model">
-                <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                <option value="gpt-4">GPT-4</option>
-                <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
-            </select>
-            
-            <label for="voice-mode">Modalità vocale:</label>
-            <select id="voice-mode">
-                <option value="computer">Computer</option>
-                <option value="data">Data</option>
-                <option value="spock">Spock</option>
-                <option value="picard">Capitano Picard</option>
-            </select>
-            
-            <span id="api-status"><span class="status-indicator status-online"></span> API configurata</span>
-        </div>
+    <div class="response-area" id="response-area">
+        <p>Computer di bordo in attesa. In cosa posso assisterti?</p>
+    </div>
+    
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="Inserisci il comando..." autofocus>
+        <button id="send-btn">INVIA</button>
+    </div>
+    
+    <div>
+        <label for="api-key">Chiave API OpenAI:</label>
+        <input type="password" id="api-key" placeholder="Inserisci la tua chiave API" style="width: 300px; padding: 5px; margin: 10px 0;">
+        <button id="toggle-debug">Mostra Debug</button>
+    </div>
+    
+    <div class="debug-info" id="debug-info">
+        <h3>Informazioni di debug</h3>
+        <div id="debug-content"></div>
     </div>
 
     <script>
-        // INSERISCI LA TUA CHIAVE API QUI
-        const OPENAI_API_KEY = "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";
-        
         document.addEventListener('DOMContentLoaded', function() {
-            // Verifica la chiave API
-            if (!OPENAI_API_KEY || OPENAI_API_KEY === "sk-tuaChiaveAPIQui") {
-                document.getElementById('api-status').innerHTML = 
-                    '<span class="status-indicator status-offline"></span> <strong>ATTENZIONE:</strong> Chiave API non configurata. Modifica il codice per inserire la tua chiave API OpenAI.';
-            }
-            
-            // Crea effetto spaziale con stelle
-            const warpField = document.getElementById('warp-field');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.opacity = Math.random();
-                warpField.appendChild(star);
-            }
-            
-            // Animazione stelle
-            setInterval(() => {
-                document.querySelectorAll('.star').forEach((star) => {
-                    star.style.left = `${Math.random() * 100}%`;
-                    star.style.top = `${Math.random() * 100}%`;
-                    star.style.opacity = Math.random();
-                });
-            }, 3000);
-            
             const responseArea = document.getElementById('response-area');
             const userInput = document.getElementById('user-input');
             const sendBtn = document.getElementById('send-btn');
-            const voiceBtn = document.getElementById('voice-btn');
-            const modelSelect = document.getElementById('model');
+            const apiKeyInput = document.getElementById('api-key');
+            const toggleDebugBtn = document.getElementById('toggle-debug');
+            const debugInfo = document.getElementById('debug-info');
+            const debugContent = document.getElementById('debug-content');
             
-            // Funzione per inviare il messaggio all'API di OpenAI
+            // Carica la chiave API se salvata
+            const savedApiKey = localStorage.getItem('openai_api_key');
+            if (savedApiKey) {
+                apiKeyInput.value = savedApiKey;
+            }
+            
+            // Funzione di debug
+            function logDebug(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                debugContent.innerHTML += `<p>[${timestamp}] ${message}</p>`;
+                console.log(`[DEBUG] ${message}`);
+            }
+            
+            // Toggle debug info
+            toggleDebugBtn.addEventListener('click', function() {
+                debugInfo.classList.toggle('show-debug');
+                if (debugInfo.classList.contains('show-debug')) {
+                    toggleDebugBtn.textContent = "Nascondi Debug";
+                } else {
+                    toggleDebugBtn.textContent = "Mostra Debug";
+                }
+            });
+            
+            // Funzione per aggiungere risposta
+            function addResponse(text) {
+                const messageElement = document.createElement('p');
+                messageElement.innerHTML = text;
+                responseArea.appendChild(messageElement);
+                responseArea.scrollTop = responseArea.scrollHeight;
+            }
+            
+            // Funzione per inviare il messaggio all'API
             async function sendMessage() {
                 const message = userInput.value.trim();
                 if (!message) return;
                 
-                if (!OPENAI_API_KEY || OPENAI_API_KEY === "sk-tuaChiaveAPIQui") {
-                    addResponse("Errore: È necessario configurare una chiave API valida nel codice.");
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    addResponse("<strong>Errore:</strong> Inserisci una chiave API valida.");
                     return;
                 }
                 
+                // Salva la chiave API
+                localStorage.setItem('openai_api_key', apiKey);
+                
                 // Aggiungi il messaggio dell'utente
-                addResponse(`<strong>Tu:</strong> ${message}`, false);
-                
-                // Mostra indicatore di digitazione
-                const typingIndicator = document.createElement('p');
-                typingIndicator.className = 'typing';
-                typingIndicator.innerHTML = `<span>Computer sta elaborando</span><span class="processing"></span>`;
-                responseArea.appendChild(typingIndicator);
-                responseArea.scrollTop = responseArea.scrollHeight;
-                
+                addResponse(`<strong>Tu:</strong> ${message}`);
                 userInput.value = '';
                 
+                // Aggiungi indicatore di caricamento
+                const loadingElement = document.createElement('p');
+                loadingElement.id = 'loading-indicator';
+                loadingElement.textContent = 'Il computer sta elaborando...';
+                responseArea.appendChild(loadingElement);
+                
                 try {
-                    const model = modelSelect.value;
+                    logDebug("Invio richiesta all'API di OpenAI...");
                     
-                    // Chiamata all'API di OpenAI
                     const response = await fetch('https://api.openai.com/v1/chat/completions', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${OPENAI_API_KEY}`
+                            'Authorization': `Bearer ${apiKey}`
                         },
                         body: JSON.stringify({
-                            model: model,
+                            model: "gpt-3.5-turbo",
                             messages: [
                                 {
                                     role: "system",
-                                    content: "Sei il computer di bordo di una nave stellare della Federazione in Star Trek. Rispondi alle domande in modo conciso ed efficiente, utilizzando occasionalmente terminologia di Star Trek. Inizia le tue risposte con un segnale acustico come 'beep' o 'chirp' quando appropriato."
+                                    content: "Sei il computer di bordo di una nave stellare della Federazione in Star Trek. Rispondi in italiano alle domande in modo conciso ed efficiente, utilizzando occasionalmente terminologia di Star Trek."
                                 },
                                 {
                                     role: "user",
@@ -332,199 +194,39 @@
                         })
                     });
                     
-                    // Rimuovi indicatore di digitazione
-                    responseArea.removeChild(typingIndicator);
+                    // Rimuovi l'indicatore di caricamento
+                    const loadingIndicator = document.getElementById('loading-indicator');
+                    if (loadingIndicator) {
+                        responseArea.removeChild(loadingIndicator);
+                    }
                     
                     if (!response.ok) {
                         const errorData = await response.json();
+                        logDebug(`Errore API: ${JSON.stringify(errorData)}`);
                         throw new Error(errorData.error?.message || 'Errore nella chiamata API');
                     }
                     
                     const data = await response.json();
+                    logDebug("Risposta ricevuta dall'API");
+                    
                     const aiResponse = data.choices[0].message.content;
-                    
-                    // Simula effetto di digitazione
-                    typeResponse(aiResponse);
-                    
-                    // Sintesi vocale (se supportata dal browser)
-                    speakResponse(aiResponse);
-                    
-                    // Effetto sonoro
-                    playComputerSound();
+                    addResponse(`<strong>Computer:</strong> ${aiResponse}`);
                     
                 } catch (error) {
-                    responseArea.removeChild(typingIndicator);
+                    logDebug(`Errore: ${error.message}`);
+                    
+                    // Rimuovi l'indicatore di caricamento se c'è stato un errore
+                    const loadingIndicator = document.getElementById('loading-indicator');
+                    if (loadingIndicator) {
+                        responseArea.removeChild(loadingIndicator);
+                    }
+                    
                     addResponse(`<strong>Errore:</strong> ${error.message}`);
                 }
             }
             
-            // Funzione per aggiungere risposta all'area di risposta
-            function addResponse(text, isAi = true) {
-                const messageElement = document.createElement('p');
-                if (isAi) {
-                    messageElement.innerHTML = `<strong>Computer:</strong> ${text}`;
-                } else {
-                    messageElement.innerHTML = text;
-                }
-                responseArea.appendChild(messageElement);
-                responseArea.scrollTop = responseArea.scrollHeight;
-            }
-            
-            // Effetto di digitazione
-            function typeResponse(text) {
-                const messageElement = document.createElement('p');
-                messageElement.innerHTML = `<strong>Computer:</strong> `;
-                responseArea.appendChild(messageElement);
-                
-                const typingElement = document.createElement('span');
-                messageElement.appendChild(typingElement);
-                
-                const cursor = document.createElement('span');
-                cursor.className = 'blinking-cursor';
-                messageElement.appendChild(cursor);
-                
-                let i = 0;
-                const typingSpeed = 30; // millisecondi per carattere
-                
-                function typeChar() {
-                    if (i < text.length) {
-                        typingElement.textContent += text.charAt(i);
-                        i++;
-                        responseArea.scrollTop = responseArea.scrollHeight;
-                        setTimeout(typeChar, typingSpeed);
-                    } else {
-                        messageElement.removeChild(cursor);
-                    }
-                }
-                
-                typeChar();
-            }
-            
-            // Funzione per sintesi vocale
-            function speakResponse(text) {
-                if ('speechSynthesis' in window) {
-                    const voiceMode = document.getElementById('voice-mode').value;
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    
-                    // Configurazioni vocali per ogni personaggio
-                    switch(voiceMode) {
-                        case 'data':
-                            utterance.pitch = 1.2;
-                            utterance.rate = 1.1;
-                            break;
-                        case 'spock':
-                            utterance.pitch = 0.9;
-                            utterance.rate = 0.9;
-                            break;
-                        case 'picard':
-                            utterance.pitch = 0.8;
-                            utterance.rate = 0.9;
-                            break;
-                        default: // computer
-                            utterance.pitch = 1.0;
-                            utterance.rate = 1.0;
-                    }
-                    
-                    // Prova a trovare una voce femminile per il computer
-                    window.speechSynthesis.onvoiceschanged = () => {
-                        const voices = window.speechSynthesis.getVoices();
-                        if (voiceMode === 'computer') {
-                            const femaleVoice = voices.find(voice => voice.name.includes('female') || voice.name.includes('Female'));
-                            if (femaleVoice) utterance.voice = femaleVoice;
-                        }
-                    };
-                    
-                    window.speechSynthesis.speak(utterance);
-                }
-            }
-            
-            // Riconoscimento vocale
-            function startVoiceRecognition() {
-                if (!('webkitSpeechRecognition' in window)) {
-                    addResponse("Il riconoscimento vocale non è supportato dal tuo browser.");
-                    return;
-                }
-                
-                const recognition = new webkitSpeechRecognition();
-                recognition.lang = 'it-IT';
-                recognition.interimResults = false;
-                
-                playBeepSound(true); // Suono di attivazione
-                addResponse(`<em>In ascolto... Parla ora.</em>`, false);
-                
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    userInput.value = transcript;
-                    addResponse(`<em>Hai detto: "${transcript}"</em>`, false);
-                    setTimeout(sendMessage, 500);
-                };
-                
-                recognition.onerror = function(event) {
-                    addResponse(`<em>Errore nel riconoscimento vocale: ${event.error}</em>`, false);
-                };
-                
-                recognition.start();
-            }
-            
-            // Effetti sonori
-            function playBeepSound(isActivation = false) {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                if (isActivation) {
-                    // Suono di attivazione vocale
-                    oscillator.type = 'sine';
-                    oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(1760, audioContext.currentTime + 0.1);
-                    
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + 0.1);
-                } else {
-                    // Beep standard
-                    oscillator.type = 'sine';
-                    oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
-                    
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + 0.2);
-                }
-            }
-            
-            function playComputerSound() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
-                
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.3);
-            }
-            
             // Event Listeners
             sendBtn.addEventListener('click', sendMessage);
-            voiceBtn.addEventListener('click', startVoiceRecognition);
             
             userInput.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
@@ -532,13 +234,7 @@
                 }
             });
             
-            // Precarica le voci disponibili
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.getVoices();
-            }
-            
-            // Effetto sonoro iniziale
-            setTimeout(playComputerSound, 1000);
+            logDebug("Applicazione inizializzata");
         });
     </script>
 </body>

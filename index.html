@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb con DeepSeek AI</title>
+    <title>AI Multi-Service Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .loader {
             border: 5px solid #f3f3f3;
-            border-top: 5px solid #FF5A5F;
+            border-top: 5px solid #3498db;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -23,43 +23,96 @@
             100% { transform: rotate(360deg); }
         }
         
-        .property-card:hover {
+        .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+        
+        .service-tab {
+            transition: all 0.3s ease;
+        }
+        
+        .service-tab.active {
+            border-color: currentColor;
+            color: white;
+        }
+        
+        /* Service specific colors */
+        .airbnb-color { color: #FF5A5F; }
+        .airbnb-bg { background-color: #FF5A5F; }
+        .amazon-color { color: #FF9900; }
+        .amazon-bg { background-color: #FF9900; }
+        .glovo-color { color: #00A082; }
+        .glovo-bg { background-color: #00A082; }
+        .frecciarossa-color { color: #CC0033; }
+        .frecciarossa-bg { background-color: #CC0033; }
+        .lufthansa-color { color: #05164D; }
+        .lufthansa-bg { background-color: #05164D; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen">
     <!-- Header -->
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <i class="fab fa-airbnb text-3xl text-[#FF5A5F] mr-2"></i>
-                <span class="text-2xl font-bold text-[#FF5A5F]">airbnb</span>
+                <i class="fas fa-brain text-blue-600 text-3xl mr-2"></i>
+                <span class="text-2xl font-bold text-blue-600">AI Multi-Service</span>
             </div>
             <nav class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-700 hover:text-[#FF5A5F]">Home</a>
-                <a href="#" class="text-gray-700 hover:text-[#FF5A5F]">Preferiti</a>
-                <a href="#" class="text-gray-700 hover:text-[#FF5A5F]">Viaggi</a>
-                <a href="#" class="text-gray-700 hover:text-[#FF5A5F]">Messaggi</a>
-                <a href="#" class="text-gray-700 hover:text-[#FF5A5F]">Profilo</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Cronologia</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Preferiti</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Account</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Aiuto</a>
             </nav>
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
+        <!-- Service Selection -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-6 text-center">Cosa vuoi fare oggi?</h1>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <button id="airbnb-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FF5A5F] hover:bg-[#FF5A5F] hover:text-white transition-all">
+                    <i class="fab fa-airbnb text-4xl mb-2 airbnb-color"></i>
+                    <span>Alloggi</span>
+                </button>
+                <button id="amazon-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FF9900] hover:bg-[#FF9900] hover:text-white transition-all">
+                    <i class="fab fa-amazon text-4xl mb-2 amazon-color"></i>
+                    <span>Shopping</span>
+                </button>
+                <button id="glovo-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#00A082] hover:bg-[#00A082] hover:text-white transition-all">
+                    <i class="fas fa-utensils text-4xl mb-2 glovo-color"></i>
+                    <span>Food</span>
+                </button>
+                <button id="frecciarossa-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#CC0033] hover:bg-[#CC0033] hover:text-white transition-all">
+                    <i class="fas fa-train text-4xl mb-2 frecciarossa-color"></i>
+                    <span>Treni</span>
+                </button>
+                <button id="lufthansa-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#05164D] hover:bg-[#05164D] hover:text-white transition-all">
+                    <i class="fas fa-plane text-4xl mb-2 lufthansa-color"></i>
+                    <span>Voli</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Section -->
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Side - AI Search -->
             <div class="lg:w-1/3">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-xl font-bold mb-4">Cerca con DeepSeek AI</h2>
-                    <p class="text-gray-600 mb-4">Descrivi dove vuoi andare e cosa stai cercando usando linguaggio naturale:</p>
+                    <div id="service-icon-container" class="flex justify-center mb-4">
+                        <i id="service-icon" class="fab fa-airbnb text-5xl airbnb-color"></i>
+                    </div>
+                    <h2 id="search-title" class="text-xl font-bold mb-4 text-center">Cerca alloggi con AI</h2>
+                    <p class="text-gray-600 mb-4">Descrivi cosa stai cercando usando linguaggio naturale e l'AI ti aiuterà a trovare le migliori opzioni:</p>
                     
                     <div class="mb-4">
-                        <textarea id="aiPrompt" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF5A5F]" rows="4" placeholder="Es: Cerco un appartamento tranquillo a Firenze vicino al centro per una coppia, con una bella vista e possibilmente con terrazza, budget massimo 150€ a notte per il prossimo weekend"></textarea>
+                        <textarea id="aiPrompt" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" placeholder="Es: Cerco un appartamento a Firenze vicino al centro per 2 persone con terrazza"></textarea>
                     </div>
                     
-                    <button id="searchButton" class="w-full bg-[#FF5A5F] text-white py-3 rounded-lg font-semibold hover:bg-[#FF4449] transition">
+                    <button id="searchButton" class="w-full bg-[#FF5A5F] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                         <i class="fas fa-search mr-2"></i>Cerca con DeepSeek AI
                     </button>
                     
@@ -75,17 +128,39 @@
             <!-- Right Side - Results -->
             <div class="lg:w-2/3">
                 <div id="resultsContainer" class="hidden">
-                    <h2 class="text-2xl font-bold mb-6">Risultati della ricerca</h2>
+                    <h2 id="results-title" class="text-2xl font-bold mb-6">Risultati della ricerca</h2>
                     
-                    <div id="propertiesList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Properties will be added here dynamically -->
+                    <div id="results-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Results will be added here dynamically -->
                     </div>
                 </div>
                 
                 <div id="initialMessage" class="bg-white p-8 rounded-lg shadow-md text-center">
-                    <i class="fas fa-home text-[#FF5A5F] text-5xl mb-4"></i>
-                    <h2 class="text-2xl font-bold mb-3">Trova il tuo prossimo alloggio</h2>
-                    <p class="text-gray-600">Usa l'intelligenza artificiale di DeepSeek per descrivere ciò che stai cercando e trova l'alloggio perfetto per te.</p>
+                    <i class="fas fa-brain text-blue-600 text-5xl mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-3">Assistente AI Multi-Servizio</h2>
+                    <p class="text-gray-600 mb-6">Seleziona un servizio e descrivi cosa stai cercando usando il linguaggio naturale. L'intelligenza artificiale DeepSeek ti aiuterà a trovare ciò di cui hai bisogno.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 text-sm">
+                        <div class="p-2 border rounded-lg">
+                            <div class="text-[#FF5A5F] font-bold">Airbnb</div>
+                            <div class="text-gray-500">Alloggi e case vacanza</div>
+                        </div>
+                        <div class="p-2 border rounded-lg">
+                            <div class="text-[#FF9900] font-bold">Amazon</div>
+                            <div class="text-gray-500">Prodotti e shopping</div>
+                        </div>
+                        <div class="p-2 border rounded-lg">
+                            <div class="text-[#00A082] font-bold">Glovo</div>
+                            <div class="text-gray-500">Cibo e consegne</div>
+                        </div>
+                        <div class="p-2 border rounded-lg">
+                            <div class="text-[#CC0033] font-bold">Frecciarossa</div>
+                            <div class="text-gray-500">Viaggi in treno</div>
+                        </div>
+                        <div class="p-2 border rounded-lg">
+                            <div class="text-[#05164D] font-bold">Lufthansa</div>
+                            <div class="text-gray-500">Voli e biglietti aerei</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,23 +170,23 @@
     <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-lg w-full max-w-md p-6">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Conferma prenotazione</h3>
+                <h3 id="modal-title" class="text-xl font-bold">Conferma prenotazione</h3>
                 <button id="closeModal" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div id="propertyDetails" class="mb-4">
-                <!-- Property details will be added here -->
+            <div id="itemDetails" class="mb-4">
+                <!-- Item details will be added here -->
             </div>
             
             <div class="border-t border-gray-200 py-4 mb-4">
                 <div class="flex justify-between mb-2">
-                    <span>Prezzo per notte</span>
-                    <span id="pricePerNight"></span>
+                    <span id="price-label">Prezzo base</span>
+                    <span id="basePrice"></span>
                 </div>
-                <div class="flex justify-between mb-2">
-                    <span>Tasse e pulizie</span>
+                <div class="flex justify-between mb-2" id="tax-container">
+                    <span id="tax-label">Tasse e spese</span>
                     <span id="taxes"></span>
                 </div>
                 <div class="flex justify-between font-bold">
@@ -126,365 +201,331 @@
                     <button id="paypalButton" class="flex-1 border border-gray-300 p-3 rounded-lg flex items-center justify-center bg-[#0070BA] text-white hover:bg-[#005ea6]">
                         <i class="fab fa-paypal mr-2"></i> PayPal
                     </button>
-                    <button class="flex-1 border border-gray-300 p-3 rounded-lg flex items-center justify-center hover:bg-gray-50">
+                    <button id="creditCardButton" class="flex-1 border border-gray-300 p-3 rounded-lg flex items-center justify-center hover:bg-gray-50">
                         <i class="far fa-credit-card mr-2"></i> Carta
                     </button>
                 </div>
             </div>
             
-            <button id="confirmButton" class="w-full bg-[#FF5A5F] text-white py-3 rounded-lg font-semibold hover:bg-[#FF4449] transition">
-                Conferma prenotazione
+            <button id="confirmButton" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Conferma e procedi
             </button>
         </div>
     </div>
 
     <script>
-        // Mock data for demonstration purposes
-        const mockProperties = [
-            {
-                id: 1,
-                name: "Elegante appartamento nel centro di Firenze",
-                description: "Splendido appartamento con vista sul Duomo, a pochi passi dai principali punti di interesse",
-                price: 145,
-                rating: 4.9,
-                reviews: 127,
-                location: "Centro storico, Firenze",
-                image: "/api/placeholder/400/300",
-                host: "Marco",
-                features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+        // Current service state
+        let currentService = 'airbnb';
+        
+        // Service configurations
+        const serviceConfig = {
+            airbnb: {
+                name: 'Airbnb',
+                icon: 'fab fa-airbnb',
+                color: '#FF5A5F',
+                title: 'Cerca alloggi con AI',
+                resultTitle: 'Alloggi disponibili',
+                promptPlaceholder: 'Es: Cerco un appartamento a Firenze vicino al centro per 2 persone con terrazza',
+                modalTitle: 'Conferma prenotazione alloggio',
+                priceLabel: 'Prezzo per notte',
+                taxLabel: 'Tasse e pulizie',
+                showTax: true,
+                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per la ricerca di alloggi su Airbnb. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: località, numero di ospiti, budget, date, e caratteristiche desiderate. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
             },
-            {
-                id: 2,
-                name: "Loft moderno vicino a Ponte Vecchio",
-                description: "Loft completamente ristrutturato con vista sull'Arno, posizione ideale per esplorare la città",
-                price: 135,
-                rating: 4.7,
-                reviews: 98,
-                location: "Oltrarno, Firenze",
-                image: "/api/placeholder/400/300",
-                host: "Laura",
-                features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Cucina", "Aria condizionata"]
+            amazon: {
+                name: 'Amazon',
+                icon: 'fab fa-amazon',
+                color: '#FF9900',
+                title: 'Cerca prodotti con AI',
+                resultTitle: 'Prodotti trovati',
+                promptPlaceholder: 'Es: Sto cercando un buon laptop per lavoro di grafica sotto i 1000 euro con SSD ampio',
+                modalTitle: 'Conferma acquisto',
+                priceLabel: 'Prezzo prodotto',
+                taxLabel: 'Spese di spedizione',
+                showTax: true,
+                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per trovare prodotti su Amazon. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: categoria di prodotto, prezzo massimo, caratteristiche, marca preferita. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
             },
-            {
-                id: 3,
-                name: "Appartamento con terrazza panoramica",
-                description: "Luminoso appartamento con terrazza privata e vista mozzafiato sulla città e le colline toscane",
-                price: 150,
-                rating: 4.8,
-                reviews: 156,
-                location: "San Niccolò, Firenze",
-                image: "/api/placeholder/400/300",
-                host: "Giulia",
-                features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+            glovo: {
+                name: 'Glovo',
+                icon: 'fas fa-utensils',
+                color: '#00A082',
+                title: 'Cerca cibo con AI',
+                resultTitle: 'Ristoranti e piatti disponibili',
+                promptPlaceholder: 'Es: Vorrei ordinare una pizza margherita e un tiramisù con consegna entro un\'ora',
+                modalTitle: 'Conferma ordine',
+                priceLabel: 'Totale ordine',
+                taxLabel: 'Spese di consegna',
+                showTax: true,
+                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per ordinare cibo con Glovo. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: tipo di cucina, piatti specifici, orario di consegna, preferenze dietetiche. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
             },
-            {
-                id: 4,
-                name: "Accogliente studio nel Quartiere Santo Spirito",
-                description: "Grazioso monolocale in zona tranquilla ma centrale, perfetto per coppie",
-                price: 120,
-                rating: 4.6,
-                reviews: 89,
-                location: "Santo Spirito, Firenze",
-                image: "/api/placeholder/400/300",
-                host: "Andrea",
-                features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Angolo cottura"]
+            frecciarossa: {
+                name: 'Frecciarossa',
+                icon: 'fas fa-train',
+                color: '#CC0033',
+                title: 'Cerca treni con AI',
+                resultTitle: 'Treni disponibili',
+                promptPlaceholder: 'Es: Mi serve un treno da Milano a Roma domani mattina in prima classe',
+                modalTitle: 'Conferma prenotazione treno',
+                priceLabel: 'Prezzo biglietto',
+                taxLabel: 'Supplementi e prenotazioni',
+                showTax: true,
+                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per prenotare viaggi in treno con Frecciarossa. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: stazione di partenza, destinazione, data e ora, classe preferita. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+            },
+            lufthansa: {
+                name: 'Lufthansa',
+                icon: 'fas fa-plane',
+                color: '#05164D',
+                title: 'Cerca voli con AI',
+                resultTitle: 'Voli disponibili',
+                promptPlaceholder: 'Es: Cerco un volo Milano-Berlino per il prossimo weekend, possibilmente con un solo bagaglio a mano',
+                modalTitle: 'Conferma prenotazione volo',
+                priceLabel: 'Prezzo volo',
+                taxLabel: 'Tasse aeroportuali',
+                showTax: true,
+                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per prenotare voli con Lufthansa. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: aeroporto di partenza, destinazione, date, numero di passeggeri, classe preferita, bagagli. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
             }
-        ];
-
-        // Function to call DeepSeek API
-        async function callDeepSeekAPI(prompt) {
-            const apiKey = 'sk-cdb69b2c6a314f9682df3e14b55dd740'; // DeepSeek API key
-            const apiUrl = 'https://api.deepseek.com/v1/chat/completions';
-            
-            try {
-                const response = await axios.post(
-                    apiUrl,
-                    {
-                        model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "system",
-                                content: "Sei un assistente che aiuta a interpretare le richieste degli utenti per la ricerca di alloggi. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: località, numero di ospiti, budget, date, e caratteristiche desiderate. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
-                            },
-                            {
-                                role: "user",
-                                content: prompt
-                            }
-                        ],
-                        temperature: 0.7,
-                        max_tokens: 500
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
-                        }
-                    }
-                );
-                
-                // Parse the response from DeepSeek
-                const aiResponse = response.data.choices[0].message.content;
-                
-                // Try to parse JSON from the response
-                try {
-                    return JSON.parse(aiResponse);
-                } catch (e) {
-                    // If parsing fails, create a structured response from the text
-                    return {
-                        understanding: aiResponse,
-                        filters: {
-                            location: extractLocation(prompt),
-                            guests: extractGuests(prompt),
-                            maxPrice: extractPrice(prompt),
-                            dates: extractDates(prompt),
-                            amenities: extractAmenities(prompt)
-                        }
-                    };
+        };
+        
+        // Mock data for services
+        const mockData = {
+            airbnb: [
+                {
+                    id: 1,
+                    name: "Elegante appartamento nel centro di Firenze",
+                    description: "Splendido appartamento con vista sul Duomo, a pochi passi dai principali punti di interesse",
+                    price: 145,
+                    rating: 4.9,
+                    reviews: 127,
+                    location: "Centro storico, Firenze",
+                    image: "/api/placeholder/400/300",
+                    host: "Marco",
+                    features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+                },
+                {
+                    id: 2,
+                    name: "Loft moderno vicino a Ponte Vecchio",
+                    description: "Loft completamente ristrutturato con vista sull'Arno, posizione ideale per esplorare la città",
+                    price: 135,
+                    rating: 4.7,
+                    reviews: 98,
+                    location: "Oltrarno, Firenze",
+                    image: "/api/placeholder/400/300",
+                    host: "Laura",
+                    features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Cucina", "Aria condizionata"]
+                },
+                {
+                    id: 3,
+                    name: "Appartamento con terrazza panoramica",
+                    description: "Luminoso appartamento con terrazza privata e vista mozzafiato sulla città e le colline toscane",
+                    price: 150,
+                    rating: 4.8,
+                    reviews: 156,
+                    location: "San Niccolò, Firenze",
+                    image: "/api/placeholder/400/300",
+                    host: "Giulia",
+                    features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+                },
+                {
+                    id: 4,
+                    name: "Accogliente studio nel Quartiere Santo Spirito",
+                    description: "Grazioso monolocale in zona tranquilla ma centrale, perfetto per coppie",
+                    price: 120,
+                    rating: 4.6,
+                    reviews: 89,
+                    location: "Santo Spirito, Firenze",
+                    image: "/api/placeholder/400/300",
+                    host: "Andrea",
+                    features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Angolo cottura"]
                 }
-            } catch (error) {
-                console.error('Error calling DeepSeek API:', error);
-                
-                // Fallback response in case of API error
-                return {
-                    understanding: `Ho analizzato la tua richiesta per: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}"`,
-                    filters: {
-                        location: extractLocation(prompt),
-                        guests: extractGuests(prompt),
-                        maxPrice: extractPrice(prompt),
-                        dates: extractDates(prompt),
-                        amenities: extractAmenities(prompt)
-                    }
-                };
-            }
-        }
-        
-        // Simple extraction functions as fallback
-        function extractLocation(text) {
-            const cities = ["firenze", "roma", "milano", "venezia", "napoli", "torino"];
-            const textLower = text.toLowerCase();
-            
-            for (const city of cities) {
-                if (textLower.includes(city)) {
-                    return city.charAt(0).toUpperCase() + city.slice(1);
+            ],
+            amazon: [
+                {
+                    id: 1,
+                    name: "Dell XPS 15 - Laptop per grafica professionale",
+                    description: "Processore Intel i7, 16GB RAM, 1TB SSD, NVIDIA GeForce RTX 3050, display 15.6\" 4K",
+                    price: 1799,
+                    rating: 4.7,
+                    reviews: 843,
+                    image: "/api/placeholder/400/300",
+                    seller: "Dell Official Store",
+                    features: ["Intel i7", "16GB RAM", "1TB SSD", "NVIDIA RTX 3050", "Display 4K", "Windows 11"]
+                },
+                {
+                    id: 2,
+                    name: "MacBook Pro 14\" M2 Pro",
+                    description: "Chip Apple M2 Pro, 16GB RAM, 512GB SSD, display Liquid Retina XDR da 14,2 pollici",
+                    price: 2149,
+                    rating: 4.9,
+                    reviews: 1267,
+                    image: "/api/placeholder/400/300",
+                    seller: "Apple Store",
+                    features: ["M2 Pro", "16GB RAM", "512GB SSD", "Display Retina XDR", "macOS"]
+                },
+                {
+                    id: 3,
+                    name: "Asus ProArt StudioBook 16",
+                    description: "AMD Ryzen 9, 32GB RAM, 1TB SSD, NVIDIA GeForce RTX 3070, display 16\" OLED",
+                    price: 2499,
+                    rating: 4.8,
+                    reviews: 412,
+                    image: "/api/placeholder/400/300",
+                    seller: "ASUS Official",
+                    features: ["Ryzen 9", "32GB RAM", "1TB SSD", "RTX 3070", "Display OLED", "Dial Creator"]
+                },
+                {
+                    id: 4,
+                    name: "Acer ConceptD 5",
+                    description: "Intel i7, 16GB RAM, 1TB SSD, NVIDIA GeForce RTX 3060, display 16\" 4K",
+                    price: 1899,
+                    rating: 4.6,
+                    reviews: 237,
+                    image: "/api/placeholder/400/300",
+                    seller: "Acer Store",
+                    features: ["Intel i7", "16GB RAM", "1TB SSD", "RTX 3060", "Display 4K", "Windows 11"]
                 }
-            }
-            
-            return "Non specificata";
-        }
-        
-        function extractGuests(text) {
-            const textLower = text.toLowerCase();
-            
-            if (textLower.includes("coppia")) return 2;
-            if (textLower.includes("famiglia")) return 4;
-            if (textLower.includes("singolo") || textLower.includes("da solo")) return 1;
-            
-            return 2; // Default
-        }
-        
-        function extractPrice(text) {
-            const priceMatch = text.match(/(\d+)[\s]*[€$]|[€$][\s]*(\d+)/);
-            return priceMatch ? parseInt(priceMatch[1] || priceMatch[2]) : 150;
-        }
-        
-        function extractDates(text) {
-            const months = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
-            
-            if (text.toLowerCase().includes("weekend")) {
-                const today = new Date();
-                const nextFriday = new Date(today);
-                nextFriday.setDate(today.getDate() + (5 - today.getDay() + 7) % 7);
-                const nextSunday = new Date(nextFriday);
-                nextSunday.setDate(nextFriday.getDate() + 2);
-                
-                return `${nextFriday.getDate()}-${nextSunday.getDate()} ${months[nextFriday.getMonth()]}`;
-            }
-            
-            return "Date non specificate";
-        }
-        
-        function extractAmenities(text) {
-            const amenities = [];
-            const textLower = text.toLowerCase();
-            
-            if (textLower.includes("vista")) amenities.push("vista");
-            if (textLower.includes("terrazza")) amenities.push("terrazza");
-            if (textLower.includes("piscina")) amenities.push("piscina");
-            if (textLower.includes("wifi") || textLower.includes("wi-fi")) amenities.push("Wi-Fi");
-            if (textLower.includes("cucina")) amenities.push("cucina");
-            
-            return amenities.length > 0 ? amenities : ["Non specificate"];
-        }
-
-        // Function to render properties
-        function renderProperties(properties) {
-            const propertiesList = document.getElementById('propertiesList');
-            propertiesList.innerHTML = '';
-            
-            properties.forEach(property => {
-                const propertyCard = document.createElement('div');
-                propertyCard.className = 'property-card bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300';
-                
-                propertyCard.innerHTML = `
-                    <img src="${property.image}" alt="${property.name}" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-sm text-gray-600">${property.location}</span>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-500 mr-1"></i>
-                                <span>${property.rating}</span>
-                            </div>
-                        </div>
-                        <h3 class="font-bold mb-2">${property.name}</h3>
-                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${property.description}</p>
-                        <div class="flex flex-wrap gap-1 mb-3">
-                            ${property.features.map(feature => `
-                                <span class="text-xs bg-gray-100 px-2 py-1 rounded">${feature}</span>
-                            `).join('')}
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="font-bold">${property.price}€</span>
-                                <span class="text-gray-600"> / notte</span>
-                            </div>
-                            <button class="book-button bg-[#FF5A5F] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#FF4449] transition" data-id="${property.id}">Prenota</button>
-                        </div>
-                    </div>
-                `;
-                
-                propertiesList.appendChild(propertyCard);
-            });
-            
-            // Add event listeners to book buttons
-            document.querySelectorAll('.book-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const propertyId = this.getAttribute('data-id');
-                    openPaymentModal(propertyId);
-                });
-            });
-        }
-
-        // Function to open payment modal
-        function openPaymentModal(propertyId) {
-            const property = mockProperties.find(p => p.id == propertyId);
-            
-            // Set property details in modal
-            document.getElementById('propertyDetails').innerHTML = `
-                <div class="flex items-center gap-4 mb-4">
-                    <img src="${property.image}" alt="${property.name}" class="w-20 h-20 object-cover rounded-lg">
-                    <div>
-                        <h4 class="font-bold">${property.name}</h4>
-                        <p class="text-sm text-gray-600">${property.location}</p>
-                    </div>
-                </div>
-            `;
-            
-            // Set pricing
-            const taxes = Math.round(property.price * 0.15);
-            const total = property.price + taxes;
-            
-            document.getElementById('pricePerNight').textContent = `${property.price}€`;
-            document.getElementById('taxes').textContent = `${taxes}€`;
-            document.getElementById('totalPrice').textContent = `${total}€`;
-            
-            // Show modal
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-
-        // Main functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchButton = document.getElementById('searchButton');
-            const aiPrompt = document.getElementById('aiPrompt');
-            const loading = document.getElementById('loading');
-            const aiSuggestion = document.getElementById('aiSuggestion');
-            const aiUnderstanding = document.getElementById('aiUnderstanding');
-            const resultsContainer = document.getElementById('resultsContainer');
-            const initialMessage = document.getElementById('initialMessage');
-            const closeModal = document.getElementById('closeModal');
-            const paypalButton = document.getElementById('paypalButton');
-            const confirmButton = document.getElementById('confirmButton');
-            
-            // Search button click handler
-            searchButton.addEventListener('click', async function() {
-                const prompt = aiPrompt.value.trim();
-                
-                if (!prompt) {
-                    alert('Per favore, inserisci una descrizione della tua ricerca.');
-                    return;
+            ],
+            glovo: [
+                {
+                    id: 1,
+                    name: "Pizzeria Napoli Vera",
+                    description: "Pizzeria tradizionale napoletana con impasto a lunga lievitazione",
+                    price: 25,
+                    rating: 4.8,
+                    reviews: 543,
+                    location: "Via Roma 34",
+                    image: "/api/placeholder/400/300",
+                    deliveryTime: "30-45 min",
+                    menu: ["Pizza Margherita", "Pizza Marinara", "Pizza Diavola", "Tiramisù", "Bibite"]
+                },
+                {
+                    id: 2,
+                    name: "Pasta & Co",
+                    description: "Pasta fresca fatta a mano e specialità italiane",
+                    price: 32,
+                    rating: 4.7,
+                    reviews: 398,
+                    location: "Corso Italia 12",
+                    image: "/api/placeholder/400/300",
+                    deliveryTime: "35-50 min",
+                    menu: ["Carbonara", "Lasagna", "Ravioli", "Panna cotta", "Vini"]
+                },
+                {
+                    id: 3,
+                    name: "Sushi House",
+                    description: "Autentico sushi giapponese preparato da chef esperti",
+                    price: 38,
+                    rating: 4.9,
+                    reviews: 876,
+                    location: "Via Verdi 56",
+                    image: "/api/placeholder/400/300",
+                    deliveryTime: "40-55 min",
+                    menu: ["Nigiri Mix", "Uramaki", "Sashimi", "Mochi", "Sake"]
+                },
+                {
+                    id: 4,
+                    name: "Burger Lab",
+                    description: "Hamburger gourmet con carne 100% italiana e ingredienti freschi",
+                    price: 28,
+                    rating: 4.6,
+                    reviews: 451,
+                    location: "Piazza Dante 7",
+                    image: "/api/placeholder/400/300",
+                    deliveryTime: "25-40 min",
+                    menu: ["Classic Burger", "Cheese Burger", "Vegan Burger", "Patatine", "Milkshake"]
                 }
-                
-                // Show loading
-                loading.classList.remove('hidden');
-                aiSuggestion.classList.add('hidden');
-                initialMessage.classList.add('hidden');
-                resultsContainer.classList.add('hidden');
-                
-                try {
-                    // Call DeepSeek API
-                    const response = await callDeepSeekAPI(prompt);
-                    
-                    // Show AI understanding
-                    aiUnderstanding.textContent = response.understanding;
-                    aiSuggestion.classList.remove('hidden');
-                    
-                    // Filter properties based on AI understanding
-                    let filteredProperties = [...mockProperties];
-                    
-                    // Apply location filter if specified
-                    if (response.filters && response.filters.location) {
-                        const locationLower = response.filters.location.toLowerCase();
-                        filteredProperties = filteredProperties.filter(property => 
-                            property.location.toLowerCase().includes(locationLower)
-                        );
-                    }
-                    
-                    // Apply price filter if specified
-                    if (response.filters && response.filters.maxPrice) {
-                        filteredProperties = filteredProperties.filter(property => 
-                            property.price <= response.filters.maxPrice
-                        );
-                    }
-                    
-                    // Apply amenities filter if specified
-                    if (response.filters && response.filters.amenities && response.filters.amenities.length > 0) {
-                        filteredProperties = filteredProperties.filter(property => {
-                            return response.filters.amenities.some(amenity => 
-                                property.features.some(feature => 
-                                    feature.toLowerCase().includes(amenity.toLowerCase())
-                                )
-                            );
-                        });
-                    }
-                    
-                    // Show results - if filters eliminated all properties, show all as fallback
-                    renderProperties(filteredProperties.length > 0 ? filteredProperties : mockProperties);
-                    resultsContainer.classList.remove('hidden');
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Si è verificato un errore durante la ricerca. Riprova più tardi.');
-                } finally {
-                    // Hide loading
-                    loading.classList.add('hidden');
+            ],
+            frecciarossa: [
+                {
+                    id: 1,
+                    name: "Frecciarossa 1000",
+                    description: "Milano Centrale - Roma Termini, diretto senza fermate intermedie",
+                    price: 89,
+                    rating: 4.7,
+                    reviews: 1243,
+                    departure: "Milano Centrale",
+                    arrival: "Roma Termini",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "08:30",
+                    arrivalTime: "11:40",
+                    features: ["Business", "Wi-Fi gratuito", "Ristorazione", "Prese elettriche", "Silenzio"]
+                },
+                {
+                    id: 2,
+                    name: "Frecciarossa 1000",
+                    description: "Milano Centrale - Roma Termini, con fermate a Bologna e Firenze",
+                    price: 79,
+                    rating: 4.5,
+                    reviews: 968,
+                    departure: "Milano Centrale",
+                    arrival: "Roma Termini",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "10:15",
+                    arrivalTime: "13:55",
+                    features: ["Standard", "Wi-Fi gratuito", "Bar", "Prese elettriche"]
+                },
+                {
+                    id: 3,
+                    name: "Frecciarossa 1000",
+                    description: "Milano Centrale - Roma Termini, diretto senza fermate intermedie",
+                    price: 95,
+                    rating: 4.8,
+                    reviews: 1432,
+                    departure: "Milano Centrale",
+                    arrival: "Roma Termini",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "12:00",
+                    arrivalTime: "15:10",
+                    features: ["Executive", "Wi-Fi gratuito", "Ristorazione al posto", "Prese elettriche", "Silenzio"]
+                },
+                {
+                    id: 4,
+                    name: "Frecciarossa 1000",
+                    description: "Milano Centrale - Roma Termini, con fermata a Firenze",
+                    price: 85,
+                    rating: 4.6,
+                    reviews: 1089,
+                    departure: "Milano Centrale",
+                    arrival: "Roma Termini",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "14:30",
+                    arrivalTime: "17:55",
+                    features: ["Prima", "Wi-Fi gratuito", "Bar", "Prese elettriche", "Area break"]
                 }
-            });
-            
-            // Close modal handler
-            closeModal.addEventListener('click', function() {
-                document.getElementById('paymentModal').classList.add('hidden');
-            });
-            
-            // PayPal button handler
-            paypalButton.addEventListener('click', function() {
-                alert('Stai per essere reindirizzato a PayPal per completare il pagamento...');
-                // In a real application, this would redirect to PayPal checkout
-            });
-            
-            // Confirm button handler
-            confirmButton.addEventListener('click', function() {
-                alert('Prenotazione confermata! Grazie per aver scelto Airbnb.');
-                document.getElementById('paymentModal').classList.add('hidden');
-            });
-        });
-    </script>
-</body>
-</html>
+            ],
+            lufthansa: [
+                {
+                    id: 1,
+                    name: "LH1234",
+                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
+                    price: 189,
+                    rating: 4.6,
+                    reviews: 876,
+                    departure: "Milano Malpensa",
+                    arrival: "Berlino Brandenburg",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "07:30",
+                    arrivalTime: "09:20",
+                    features: ["Economy", "Bagaglio a mano", "Pasto", "Intrattenimento"]
+                },
+                {
+                    id: 2,
+                    name: "LH1434",
+                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
+                    price: 249,
+                    rating: 4.7,
+                    reviews: 723,
+                    departure: "Milano Malpensa",
+                    arrival: "Berlino Brandenburg",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "12:15",
+                    arrivalTime: "14:05",
+                    features: ["Economy Premium", "Bagaglio a mano", "Bagaglio da stiva 23kg", "Pasto premium"]
+                },
+                {
+                    id: 3,
+                    name: "LH5678",
+                    description: "Milano Malpensa (MXP) - Berlino (BER), con scalo a Monaco",
+                    price: 159,
+                    rating: 4.4,
+                    reviews: 542,
+                    departure: "Milano Malpensa",

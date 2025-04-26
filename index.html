@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Multi-Service Platform</title>
+    <title>FedService Universal Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: #0C1013;
+            color: #D4E3EF;
+        }
+        
         .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
+            border: 5px solid #182436;
+            border-top: 5px solid #5EADFC;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -23,47 +31,124 @@
             100% { transform: rotate(360deg); }
         }
         
+        .lcars-border {
+            border-radius: 30px 0 0 30px;
+        }
+        
+        .lcars-border-right {
+            border-radius: 0 30px 30px 0;
+        }
+        
+        .lcars-corner {
+            border-radius: 30px 0 0 0;
+        }
+        
+        .lcars-panel {
+            background: linear-gradient(180deg, #182436 0%, #0F1824 100%);
+            border: 1px solid #2E4562;
+            box-shadow: 0 0 15px rgba(94, 173, 252, 0.2);
+        }
+        
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(94, 173, 252, 0.4);
         }
         
         .service-tab {
             transition: all 0.3s ease;
+            border: 1px solid #2E4562;
         }
         
         .service-tab.active {
             border-color: currentColor;
-            color: white;
+            color: #0C1013;
         }
         
         /* Service specific colors */
-        .airbnb-color { color: #FF5A5F; }
-        .airbnb-bg { background-color: #FF5A5F; }
-        .amazon-color { color: #FF9900; }
-        .amazon-bg { background-color: #FF9900; }
-        .glovo-color { color: #00A082; }
-        .glovo-bg { background-color: #00A082; }
-        .frecciarossa-color { color: #CC0033; }
-        .frecciarossa-bg { background-color: #CC0033; }
-        .lufthansa-color { color: #05164D; }
-        .lufthansa-bg { background-color: #05164D; }
+        .starfleet-color { color: #5EADFC; }
+        .starfleet-bg { background-color: #5EADFC; }
+        .klingon-color { color: #FF5A5F; }
+        .klingon-bg { background-color: #FF5A5F; }
+        .ferengi-color { color: #FFD700; }
+        .ferengi-bg { background-color: #FFD700; }
+        .romulan-color { color: #00A082; }
+        .romulan-bg { background-color: #00A082; }
+        .vulcan-color { color: #D64D00; }
+        .vulcan-bg { background-color: #D64D00; }
+        
+        /* Blinking cursor effect */
+        .blink-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* LCARS Button styling */
+        .lcars-button {
+            border-radius: 18px 0 0 18px;
+            height: 36px;
+            padding-left: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .lcars-button::after {
+            content: '';
+            position: absolute;
+            right: -18px;
+            top: 0;
+            width: 18px;
+            height: 36px;
+            border-radius: 0 18px 18px 0;
+            background-color: inherit;
+        }
+        
+        .lcars-button:hover {
+            filter: brightness(1.2);
+        }
+        
+        /* Console display styling */
+        .console-display {
+            background-color: #0A1622;
+            border: 1px solid #2E4562;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .console-display::before {
+            content: 'LCARS ACCESS ' attr(data-terminal);
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            font-size: 12px;
+            color: #5EADFC;
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<body class="min-h-screen">
+    <!-- Header - LCARS Style -->
+    <header class="bg-[#182436] shadow-lg border-b border-[#2E4562]">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-                <i class="fas fa-brain text-blue-600 text-3xl mr-2"></i>
-                <span class="text-2xl font-bold text-blue-600">AI Multi-Service</span>
+                <div class="w-16 h-16 bg-[#5EADFC] lcars-border flex items-center justify-center mr-4">
+                    <i class="fas fa-project-diagram text-[#0C1013] text-3xl"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-bold text-[#5EADFC]">LCARS</span>
+                    <span class="text-xl font-light ml-2">Universal Search</span>
+                    <div class="text-sm text-[#8BA5C4]">Stardate 102537.4</div>
+                </div>
             </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="#" class="text-gray-700 hover:text-blue-600">Home</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Cronologia</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Preferiti</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Account</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Aiuto</a>
+            <nav class="hidden md:flex space-x-1">
+                <button class="lcars-button bg-[#5EADFC] text-[#0C1013] px-4">Home</button>
+                <button class="lcars-button bg-[#FFD700] text-[#0C1013] px-4">Logs</button>
+                <button class="lcars-button bg-[#FF5A5F] text-[#0C1013] px-4">Profile</button>
+                <button class="lcars-button bg-[#00A082] text-[#0C1013] px-4">Help</button>
             </nav>
         </div>
     </header>
@@ -72,27 +157,29 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Service Selection -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-6 text-center">Cosa vuoi fare oggi?</h1>
+            <h1 class="text-3xl font-light mb-2 text-center">Universal Service Interface</h1>
+            <p class="text-center text-[#8BA5C4] mb-6">Select function and provide voice or text query</p>
+            
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <button id="airbnb-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FF5A5F] hover:bg-[#FF5A5F] hover:text-white transition-all">
-                    <i class="fab fa-airbnb text-4xl mb-2 airbnb-color"></i>
-                    <span>Alloggi</span>
+                <button id="starfleet-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#5EADFC] hover:bg-[#5EADFC] hover:text-[#0C1013] transition-all">
+                    <i class="fas fa-home text-4xl mb-2 starfleet-color"></i>
+                    <span>Accommodations</span>
                 </button>
-                <button id="amazon-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FF9900] hover:bg-[#FF9900] hover:text-white transition-all">
-                    <i class="fab fa-amazon text-4xl mb-2 amazon-color"></i>
-                    <span>Shopping</span>
+                <button id="ferengi-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FFD700] hover:bg-[#FFD700] hover:text-[#0C1013] transition-all">
+                    <i class="fas fa-shopping-cart text-4xl mb-2 ferengi-color"></i>
+                    <span>Commerce</span>
                 </button>
-                <button id="glovo-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#00A082] hover:bg-[#00A082] hover:text-white transition-all">
-                    <i class="fas fa-utensils text-4xl mb-2 glovo-color"></i>
-                    <span>Food</span>
+                <button id="romulan-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#00A082] hover:bg-[#00A082] hover:text-[#0C1013] transition-all">
+                    <i class="fas fa-utensils text-4xl mb-2 romulan-color"></i>
+                    <span>Sustenance</span>
                 </button>
-                <button id="frecciarossa-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#CC0033] hover:bg-[#CC0033] hover:text-white transition-all">
-                    <i class="fas fa-train text-4xl mb-2 frecciarossa-color"></i>
-                    <span>Treni</span>
+                <button id="klingon-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#FF5A5F] hover:bg-[#FF5A5F] hover:text-[#0C1013] transition-all">
+                    <i class="fas fa-train text-4xl mb-2 klingon-color"></i>
+                    <span>Ground Transport</span>
                 </button>
-                <button id="lufthansa-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#05164D] hover:bg-[#05164D] hover:text-white transition-all">
-                    <i class="fas fa-plane text-4xl mb-2 lufthansa-color"></i>
-                    <span>Voli</span>
+                <button id="vulcan-tab" class="service-tab flex flex-col items-center justify-center p-4 rounded-lg border-2 border-transparent hover:border-[#D64D00] hover:bg-[#D64D00] hover:text-[#0C1013] transition-all">
+                    <i class="fas fa-rocket text-4xl mb-2 vulcan-color"></i>
+                    <span>Air Transport</span>
                 </button>
             </div>
         </div>
@@ -101,26 +188,26 @@
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Side - AI Search -->
             <div class="lg:w-1/3">
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="lcars-panel p-6 rounded-lg">
                     <div id="service-icon-container" class="flex justify-center mb-4">
-                        <i id="service-icon" class="fab fa-airbnb text-5xl airbnb-color"></i>
+                        <i id="service-icon" class="fas fa-home text-5xl starfleet-color"></i>
                     </div>
-                    <h2 id="search-title" class="text-xl font-bold mb-4 text-center">Cerca alloggi con AI</h2>
-                    <p class="text-gray-600 mb-4">Descrivi cosa stai cercando usando linguaggio naturale e l'AI ti aiuterà a trovare le migliori opzioni:</p>
+                    <h2 id="search-title" class="text-xl font-bold mb-4 text-center text-[#5EADFC]">Universal Translator Query</h2>
+                    <p class="text-[#8BA5C4] mb-4">Describe your requirements in natural language and the DeepSeek AI will assist:</p>
                     
-                    <div class="mb-4">
-                        <textarea id="aiPrompt" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" placeholder="Es: Cerco un appartamento a Firenze vicino al centro per 2 persone con terrazza"></textarea>
+                    <div class="mb-4 console-display" data-terminal="47-ALPHA">
+                        <textarea id="aiPrompt" class="w-full p-3 bg-transparent border-none focus:outline-none text-[#D4E3EF]" rows="4" placeholder="VOCAL INTERFACE ACTIVE >> Describe accommodations near Federation HQ for 2 crew members..."></textarea>
                     </div>
                     
-                    <button id="searchButton" class="w-full bg-[#FF5A5F] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                        <i class="fas fa-search mr-2"></i>Cerca con DeepSeek AI
+                    <button id="searchButton" class="w-full bg-[#5EADFC] text-[#0C1013] py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        <i class="fas fa-microphone mr-2"></i>Process Query with DeepSeek AI
                     </button>
                     
                     <div id="loading" class="loader hidden"></div>
                     
-                    <div id="aiSuggestion" class="mt-4 p-4 bg-gray-50 rounded-lg hidden">
-                        <h3 class="font-bold mb-2">L'AI ha capito:</h3>
-                        <div id="aiUnderstanding" class="text-gray-700"></div>
+                    <div id="aiSuggestion" class="mt-4 p-4 bg-[#0A1622] rounded-lg hidden border border-[#2E4562]">
+                        <h3 class="font-bold mb-2 text-[#5EADFC]">Query Analysis:</h3>
+                        <div id="aiUnderstanding" class="text-[#D4E3EF]"></div>
                     </div>
                 </div>
             </div>
@@ -128,37 +215,40 @@
             <!-- Right Side - Results -->
             <div class="lg:w-2/3">
                 <div id="resultsContainer" class="hidden">
-                    <h2 id="results-title" class="text-2xl font-bold mb-6">Risultati della ricerca</h2>
+                    <div class="flex items-center mb-6">
+                        <div class="w-6 h-12 bg-[#5EADFC] mr-3"></div>
+                        <h2 id="results-title" class="text-2xl font-light">Search Results</h2>
+                    </div>
                     
                     <div id="results-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Results will be added here dynamically -->
                     </div>
                 </div>
                 
-                <div id="initialMessage" class="bg-white p-8 rounded-lg shadow-md text-center">
-                    <i class="fas fa-brain text-blue-600 text-5xl mb-4"></i>
-                    <h2 class="text-2xl font-bold mb-3">Assistente AI Multi-Servizio</h2>
-                    <p class="text-gray-600 mb-6">Seleziona un servizio e descrivi cosa stai cercando usando il linguaggio naturale. L'intelligenza artificiale DeepSeek ti aiuterà a trovare ciò di cui hai bisogno.</p>
+                <div id="initialMessage" class="lcars-panel p-8 rounded-lg text-center">
+                    <i class="fas fa-project-diagram text-[#5EADFC] text-5xl mb-4"></i>
+                    <h2 class="text-2xl font-light mb-3 text-[#5EADFC]">LCARS Universal Service Interface</h2>
+                    <p class="text-[#8BA5C4] mb-6">Select a service category and describe your requirements using natural language. The DeepSeek AI will process your query and provide relevant options meeting your specifications.</p>
                     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 text-sm">
-                        <div class="p-2 border rounded-lg">
-                            <div class="text-[#FF5A5F] font-bold">Airbnb</div>
-                            <div class="text-gray-500">Alloggi e case vacanza</div>
+                        <div class="p-2 border border-[#2E4562] rounded-lg">
+                            <div class="text-[#5EADFC] font-bold">Starfleet</div>
+                            <div class="text-[#8BA5C4]">Accommodations</div>
                         </div>
-                        <div class="p-2 border rounded-lg">
-                            <div class="text-[#FF9900] font-bold">Amazon</div>
-                            <div class="text-gray-500">Prodotti e shopping</div>
+                        <div class="p-2 border border-[#2E4562] rounded-lg">
+                            <div class="text-[#FFD700] font-bold">Ferengi</div>
+                            <div class="text-[#8BA5C4]">Commerce Network</div>
                         </div>
-                        <div class="p-2 border rounded-lg">
-                            <div class="text-[#00A082] font-bold">Glovo</div>
-                            <div class="text-gray-500">Cibo e consegne</div>
+                        <div class="p-2 border border-[#2E4562] rounded-lg">
+                            <div class="text-[#00A082] font-bold">Romulan</div>
+                            <div class="text-[#8BA5C4]">Food Replicator</div>
                         </div>
-                        <div class="p-2 border rounded-lg">
-                            <div class="text-[#CC0033] font-bold">Frecciarossa</div>
-                            <div class="text-gray-500">Viaggi in treno</div>
+                        <div class="p-2 border border-[#2E4562] rounded-lg">
+                            <div class="text-[#FF5A5F] font-bold">Klingon</div>
+                            <div class="text-[#8BA5C4]">Ground Transport</div>
                         </div>
-                        <div class="p-2 border rounded-lg">
-                            <div class="text-[#05164D] font-bold">Lufthansa</div>
-                            <div class="text-gray-500">Voli e biglietti aerei</div>
+                        <div class="p-2 border border-[#2E4562] rounded-lg">
+                            <div class="text-[#D64D00] font-bold">Vulcan</div>
+                            <div class="text-[#8BA5C4]">Orbital Shuttle</div>
                         </div>
                     </div>
                 </div>
@@ -166,12 +256,15 @@
         </div>
     </div>
     
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg w-full max-w-md p-6">
+    <!-- Transaction Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+        <div class="bg-[#182436] rounded-lg w-full max-w-md p-6 border border-[#2E4562] shadow-lg shadow-[#5EADFC]/20">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-title" class="text-xl font-bold">Conferma prenotazione</h3>
-                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                <div class="flex items-center">
+                    <div class="w-4 h-8 bg-[#5EADFC] mr-3"></div>
+                    <h3 id="modal-title" class="text-xl font-light">Confirm Requisition</h3>
+                </div>
+                <button id="closeModal" class="text-[#8BA5C4] hover:text-[#D4E3EF]">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -180,802 +273,297 @@
                 <!-- Item details will be added here -->
             </div>
             
-            <div class="border-t border-gray-200 py-4 mb-4">
+            <div class="border-t border-[#2E4562] py-4 mb-4">
                 <div class="flex justify-between mb-2">
-                    <span id="price-label">Prezzo base</span>
+                    <span id="price-label">Base Rate</span>
                     <span id="basePrice"></span>
                 </div>
                 <div class="flex justify-between mb-2" id="tax-container">
-                    <span id="tax-label">Tasse e spese</span>
+                    <span id="tax-label">Federation Tax</span>
                     <span id="taxes"></span>
                 </div>
-                <div class="flex justify-between font-bold">
-                    <span>Totale</span>
+                <div class="flex justify-between font-bold text-[#5EADFC]">
+                    <span>Total Credits</span>
                     <span id="totalPrice"></span>
                 </div>
             </div>
             
             <div class="mb-4">
-                <h4 class="font-bold mb-2">Scegli metodo di pagamento</h4>
+                <h4 class="font-bold mb-2 text-[#8BA5C4]">Select Payment Method</h4>
                 <div class="flex gap-3 mb-4">
-                    <button id="paypalButton" class="flex-1 border border-gray-300 p-3 rounded-lg flex items-center justify-center bg-[#0070BA] text-white hover:bg-[#005ea6]">
-                        <i class="fab fa-paypal mr-2"></i> PayPal
+                    <button id="paypalButton" class="flex-1 border border-[#2E4562] p-3 rounded-lg flex items-center justify-center bg-[#5EADFC] text-[#0C1013] hover:bg-[#7cbdfc]">
+                        <i class="fas fa-credit-card-front mr-2"></i> Federation Credits
                     </button>
-                    <button id="creditCardButton" class="flex-1 border border-gray-300 p-3 rounded-lg flex items-center justify-center hover:bg-gray-50">
-                        <i class="far fa-credit-card mr-2"></i> Carta
+                    <button id="creditCardButton" class="flex-1 border border-[#2E4562] p-3 rounded-lg flex items-center justify-center hover:bg-[#0A1622]">
+                        <i class="fas fa-gem mr-2"></i> Latinum
                     </button>
                 </div>
             </div>
             
-            <button id="confirmButton" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                Conferma e procedi
+            <button id="confirmButton" class="w-full bg-[#5EADFC] text-[#0C1013] py-3 rounded-lg font-semibold hover:bg-[#7cbdfc] transition">
+                Confirm and Authorize
             </button>
         </div>
     </div>
 
     <script>
         // Current service state
-        let currentService = 'airbnb';
+        let currentService = 'starfleet';
         
         // Service configurations
         const serviceConfig = {
-            airbnb: {
-                name: 'Airbnb',
-                icon: 'fab fa-airbnb',
-                color: '#FF5A5F',
-                title: 'Cerca alloggi con AI',
-                resultTitle: 'Alloggi disponibili',
-                promptPlaceholder: 'Es: Cerco un appartamento a Firenze vicino al centro per 2 persone con terrazza',
-                modalTitle: 'Conferma prenotazione alloggio',
-                priceLabel: 'Prezzo per notte',
-                taxLabel: 'Tasse e pulizie',
+            starfleet: {
+                name: 'Starfleet',
+                icon: 'fas fa-home',
+                color: '#5EADFC',
+                title: 'Accommodation Search',
+                resultTitle: 'Available Quarters',
+                promptPlaceholder: 'VOCAL INTERFACE ACTIVE >> Describe accommodations near Federation HQ for 2 crew members...',
+                modalTitle: 'Confirm Accommodation Request',
+                priceLabel: 'Credits per night',
+                taxLabel: 'Federation surcharge',
                 showTax: true,
-                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per la ricerca di alloggi su Airbnb. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: località, numero di ospiti, budget, date, e caratteristiche desiderate. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+                systemPrompt: "You are an assistant that helps interpret user requests for finding accommodations. Analyze the user's request and extract relevant information such as: location, number of guests, budget, dates, and desired features. Respond in JSON format with the following fields: 'understanding' (summary of the request) and 'filters' (object with extracted filters)."
             },
-            amazon: {
-                name: 'Amazon',
-                icon: 'fab fa-amazon',
-                color: '#FF9900',
-                title: 'Cerca prodotti con AI',
-                resultTitle: 'Prodotti trovati',
-                promptPlaceholder: 'Es: Sto cercando un buon laptop per lavoro di grafica sotto i 1000 euro con SSD ampio',
-                modalTitle: 'Conferma acquisto',
-                priceLabel: 'Prezzo prodotto',
-                taxLabel: 'Spese di spedizione',
+            ferengi: {
+                name: 'Ferengi',
+                icon: 'fas fa-shopping-cart',
+                color: '#FFD700',
+                title: 'Commerce Database',
+                resultTitle: 'Available Products',
+                promptPlaceholder: 'VOCAL INTERFACE ACTIVE >> I require a high-performance data padd with extended memory capacity...',
+                modalTitle: 'Confirm Purchase',
+                priceLabel: 'Product cost',
+                taxLabel: 'Trade Federation fee',
                 showTax: true,
-                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per trovare prodotti su Amazon. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: categoria di prodotto, prezzo massimo, caratteristiche, marca preferita. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+                systemPrompt: "You are an assistant that helps interpret user requests for finding products. Analyze the user's request and extract relevant information such as: product category, maximum price, features, preferred brand. Respond in JSON format with the following fields: 'understanding' (summary of the request) and 'filters' (object with extracted filters)."
             },
-            glovo: {
-                name: 'Glovo',
+            romulan: {
+                name: 'Romulan',
                 icon: 'fas fa-utensils',
                 color: '#00A082',
-                title: 'Cerca cibo con AI',
-                resultTitle: 'Ristoranti e piatti disponibili',
-                promptPlaceholder: 'Es: Vorrei ordinare una pizza margherita e un tiramisù con consegna entro un\'ora',
-                modalTitle: 'Conferma ordine',
-                priceLabel: 'Totale ordine',
-                taxLabel: 'Spese di consegna',
+                title: 'Food Replicator',
+                resultTitle: 'Available Sustenance Options',
+                promptPlaceholder: 'VOCAL INTERFACE ACTIVE >> I would like Vulcan plomeek soup and Earth tiramisu dessert...',
+                modalTitle: 'Confirm Food Order',
+                priceLabel: 'Total replication cost',
+                taxLabel: 'Delivery charge',
                 showTax: true,
-                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per ordinare cibo con Glovo. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: tipo di cucina, piatti specifici, orario di consegna, preferenze dietetiche. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+                systemPrompt: "You are an assistant that helps interpret user requests for ordering food. Analyze the user's request and extract relevant information such as: cuisine type, specific dishes, delivery time, dietary preferences. Respond in JSON format with the following fields: 'understanding' (summary of the request) and 'filters' (object with extracted filters)."
             },
-            frecciarossa: {
-                name: 'Frecciarossa',
+            klingon: {
+                name: 'Klingon',
                 icon: 'fas fa-train',
-                color: '#CC0033',
-                title: 'Cerca treni con AI',
-                resultTitle: 'Treni disponibili',
-                promptPlaceholder: 'Es: Mi serve un treno da Milano a Roma domani mattina in prima classe',
-                modalTitle: 'Conferma prenotazione treno',
-                priceLabel: 'Prezzo biglietto',
-                taxLabel: 'Supplementi e prenotazioni',
+                color: '#FF5A5F',
+                title: 'Ground Transport',
+                resultTitle: 'Available Transports',
+                promptPlaceholder: 'VOCAL INTERFACE ACTIVE >> I need transport from Federation HQ to Alpha Quadrant Embassy tomorrow morning...',
+                modalTitle: 'Confirm Transport Booking',
+                priceLabel: 'Transport fare',
+                taxLabel: 'Security clearance fee',
                 showTax: true,
-                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per prenotare viaggi in treno con Frecciarossa. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: stazione di partenza, destinazione, data e ora, classe preferita. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+                systemPrompt: "You are an assistant that helps interpret user requests for booking ground transportation. Analyze the user's request and extract relevant information such as: departure location, destination, date and time, class preference. Respond in JSON format with the following fields: 'understanding' (summary of the request) and 'filters' (object with extracted filters)."
             },
-            lufthansa: {
-                name: 'Lufthansa',
-                icon: 'fas fa-plane',
-                color: '#05164D',
-                title: 'Cerca voli con AI',
-                resultTitle: 'Voli disponibili',
-                promptPlaceholder: 'Es: Cerco un volo Milano-Berlino per il prossimo weekend, possibilmente con un solo bagaglio a mano',
-                modalTitle: 'Conferma prenotazione volo',
-                priceLabel: 'Prezzo volo',
-                taxLabel: 'Tasse aeroportuali',
+            vulcan: {
+                name: 'Vulcan',
+                icon: 'fas fa-rocket',
+                color: '#D64D00',
+                title: 'Orbital Shuttle',
+                resultTitle: 'Available Shuttles',
+                promptPlaceholder: 'VOCAL INTERFACE ACTIVE >> I need a shuttle from Earth to Mars colony next weekend with minimal luggage...',
+                modalTitle: 'Confirm Shuttle Reservation',
+                priceLabel: 'Shuttle fare',
+                taxLabel: 'Interplanetary tax',
                 showTax: true,
-                systemPrompt: "Sei un assistente che aiuta a interpretare le richieste degli utenti per prenotare voli con Lufthansa. Analizza la richiesta dell'utente ed estrai le informazioni rilevanti come: aeroporto di partenza, destinazione, date, numero di passeggeri, classe preferita, bagagli. Rispondi in formato JSON con i seguenti campi: 'understanding' (riepilogo della richiesta) e 'filters' (oggetto con i filtri estratti)."
+                systemPrompt: "You are an assistant that helps interpret user requests for booking shuttle flights. Analyze the user's request and extract relevant information such as: departure location, destination, dates, number of passengers, class preference, luggage. Respond in JSON format with the following fields: 'understanding' (summary of the request) and 'filters' (object with extracted filters)."
             }
         };
         
         // Mock data for services
         const mockData = {
-            airbnb: [
+            starfleet: [
                 {
                     id: 1,
-                    name: "Elegante appartamento nel centro di Firenze",
-                    description: "Splendido appartamento con vista sul Duomo, a pochi passi dai principali punti di interesse",
+                    name: "Officer's Quarters - Federation Plaza",
+                    description: "Elegant accommodations with view of the Federation Headquarters, walking distance to all diplomatic facilities",
                     price: 145,
                     rating: 4.9,
                     reviews: 127,
-                    location: "Centro storico, Firenze",
+                    location: "Federation District, Earth",
                     image: "/api/placeholder/400/300",
-                    host: "Marco",
-                    features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+                    host: "Lt. Cmdr. Rodriguez",
+                    features: ["2 crew capacity", "Separate sleeping area", "Sonic shower", "Subspace comms", "Replicator", "Observation deck"]
                 },
                 {
                     id: 2,
-                    name: "Loft moderno vicino a Ponte Vecchio",
-                    description: "Loft completamente ristrutturato con vista sull'Arno, posizione ideale per esplorare la città",
+                    name: "Modern Loft near Starfleet Academy",
+                    description: "Recently renovated quarters with view of the Golden Gate Bridge, ideal for Academy visitors",
                     price: 135,
                     rating: 4.7,
                     reviews: 98,
-                    location: "Oltrarno, Firenze",
+                    location: "San Francisco, Earth",
                     image: "/api/placeholder/400/300",
-                    host: "Laura",
-                    features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Cucina", "Aria condizionata"]
+                    host: "Cmdr. T'Lara",
+                    features: ["2 crew capacity", "Studio layout", "Sonic shower", "Subspace comms", "Replicator", "Climate control"]
                 },
                 {
                     id: 3,
-                    name: "Appartamento con terrazza panoramica",
-                    description: "Luminoso appartamento con terrazza privata e vista mozzafiato sulla città e le colline toscane",
+                    name: "Diplomatic Suite with Observation Deck",
+                    description: "Spacious quarters with private observation deck and stunning views of Earth and orbital stations",
                     price: 150,
                     rating: 4.8,
                     reviews: 156,
-                    location: "San Niccolò, Firenze",
+                    location: "Federation Tower, Earth",
                     image: "/api/placeholder/400/300",
-                    host: "Giulia",
-                    features: ["2 ospiti", "1 camera da letto", "1 bagno", "Wi-Fi", "Cucina", "Terrazza"]
+                    host: "Ambassador Shras",
+                    features: ["2 crew capacity", "Separate sleeping area", "Sonic shower", "Subspace comms", "Replicator", "Observation deck"]
                 },
                 {
                     id: 4,
-                    name: "Accogliente studio nel Quartiere Santo Spirito",
-                    description: "Grazioso monolocale in zona tranquilla ma centrale, perfetto per coppie",
+                    name: "Cozy Studio in Cultural District",
+                    description: "Comfortable accommodations in the vibrant district housing embassies and cultural centers",
                     price: 120,
                     rating: 4.6,
                     reviews: 89,
-                    location: "Santo Spirito, Firenze",
+                    location: "Diplomatic Quarter, Earth",
                     image: "/api/placeholder/400/300",
-                    host: "Andrea",
-                    features: ["2 ospiti", "Studio", "1 bagno", "Wi-Fi", "Angolo cottura"]
+                    host: "Lt. Chen",
+                    features: ["2 crew capacity", "Studio layout", "Sonic shower", "Basic comms", "Food synthesizer"]
                 }
             ],
-            amazon: [
+            ferengi: [
                 {
                     id: 1,
-                    name: "Dell XPS 15 - Laptop per grafica professionale",
-                    description: "Processore Intel i7, 16GB RAM, 1TB SSD, NVIDIA GeForce RTX 3050, display 15.6\" 4K",
+                    name: "DataPro X7 - Professional Grade PADD",
+                    description: "Quantum processor, 500 TB storage, Isolinear circuitry, 15-inch holographic display",
                     price: 1799,
                     rating: 4.7,
                     reviews: 843,
                     image: "/api/placeholder/400/300",
-                    seller: "Dell Official Store",
-                    features: ["Intel i7", "16GB RAM", "1TB SSD", "NVIDIA RTX 3050", "Display 4K", "Windows 11"]
+                    seller: "Starfleet Technology Division",
+                    features: ["Quantum Core", "500TB Storage", "Isolinear Circuits", "Holographic Display", "Universal Translator", "Federation OS 12"]
                 },
                 {
                     id: 2,
-                    name: "MacBook Pro 14\" M2 Pro",
-                    description: "Chip Apple M2 Pro, 16GB RAM, 512GB SSD, display Liquid Retina XDR da 14,2 pollici",
+                    name: "QuantumPADD Pro 14\"",
+                    description: "Vulcan Quantum Core, 1 PB storage, Advanced bio-neural circuitry, 14-inch adaptive display",
                     price: 2149,
                     rating: 4.9,
                     reviews: 1267,
                     image: "/api/placeholder/400/300",
-                    seller: "Apple Store",
-                    features: ["M2 Pro", "16GB RAM", "512GB SSD", "Display Retina XDR", "macOS"]
+                    seller: "Vulcan Science Academy",
+                    features: ["Bio-neural Core", "1PB Storage", "Neural Interface", "Adaptive Display", "Universal Translator", "VSA OS"]
                 },
                 {
                     id: 3,
-                    name: "Asus ProArt StudioBook 16",
-                    description: "AMD Ryzen 9, 32GB RAM, 1TB SSD, NVIDIA GeForce RTX 3070, display 16\" OLED",
+                    name: "Andorian IceForge WorkStation",
+                    description: "Multi-core quantum processor, 2 PB storage, Enhanced isolinear circuitry, 16-inch holographic display",
                     price: 2499,
                     rating: 4.8,
                     reviews: 412,
                     image: "/api/placeholder/400/300",
-                    seller: "ASUS Official",
-                    features: ["Ryzen 9", "32GB RAM", "1TB SSD", "RTX 3070", "Display OLED", "Dial Creator"]
+                    seller: "Andorian Tech Collective",
+                    features: ["Multi-quantum Core", "2PB Storage", "Enhanced Circuits", "Holographic Interface", "Universal Translator", "Creative Suite"]
                 },
                 {
                     id: 4,
-                    name: "Acer ConceptD 5",
-                    description: "Intel i7, 16GB RAM, 1TB SSD, NVIDIA GeForce RTX 3060, display 16\" 4K",
+                    name: "Trill Symbiosis WorkPADD",
+                    description: "Neural-linked processor, 1.5 PB storage, Bio-mimetic circuitry, 16-inch adaptive display",
                     price: 1899,
                     rating: 4.6,
                     reviews: 237,
                     image: "/api/placeholder/400/300",
-                    seller: "Acer Store",
-                    features: ["Intel i7", "16GB RAM", "1TB SSD", "RTX 3060", "Display 4K", "Windows 11"]
+                    seller: "Trill Science Commission",
+                    features: ["Neural-link Core", "1.5PB Storage", "Bio-mimetic Circuits", "Adaptive Interface", "Universal Translator", "Trill OS"]
                 }
             ],
-            glovo: [
+            romulan: [
                 {
                     id: 1,
-                    name: "Pizzeria Napoli Vera",
-                    description: "Pizzeria tradizionale napoletana con impasto a lunga lievitazione",
+                    name: "Napoli Nova - Authentic Italian Cuisine",
+                    description: "Traditional Italian cuisine using authentic Earth recipes and ingredients",
                     price: 25,
                     rating: 4.8,
                     reviews: 543,
-                    location: "Via Roma 34",
+                    location: "Federation Plaza, Level 34",
                     image: "/api/placeholder/400/300",
                     deliveryTime: "30-45 min",
-                    menu: ["Pizza Margherita", "Pizza Marinara", "Pizza Diavola", "Tiramisù", "Bibite"]
+                    menu: ["Pizza Margherita", "Pizza Marinara", "Pizza Diavola", "Tiramisu", "Earth Beverages"]
                 },
                 {
                     id: 2,
-                    name: "Pasta & Co",
-                    description: "Pasta fresca fatta a mano e specialità italiane",
+                    name: "Pasta Continuum",
+                    description: "Fresh handmade pasta and Italian specialties from multiple Earth regions",
                     price: 32,
                     rating: 4.7,
                     reviews: 398,
-                    location: "Corso Italia 12",
+                    location: "Federation Tower, Level 52",
                     image: "/api/placeholder/400/300",
                     deliveryTime: "35-50 min",
-                    menu: ["Carbonara", "Lasagna", "Ravioli", "Panna cotta", "Vini"]
+                    menu: ["Carbonara", "Lasagna", "Ravioli", "Panna cotta", "Earth Wines"]
                 },
                 {
                     id: 3,
-                    name: "Sushi House",
-                    description: "Autentico sushi giapponese preparato da chef esperti",
+                    name: "Sushi Sector",
+                    description: "Authentic Japanese sushi prepared by expert replicator-chefs",
                     price: 38,
                     rating: 4.9,
                     reviews: 876,
-                    location: "Via Verdi 56",
+                    location: "Diplomatic Quarter, Level 12",
                     image: "/api/placeholder/400/300",
                     deliveryTime: "40-55 min",
-                    menu: ["Nigiri Mix", "Uramaki", "Sashimi", "Mochi", "Sake"]
+                    menu: ["Nigiri Selection", "Uramaki", "Sashimi", "Mochi", "Sake"]
                 },
                 {
                     id: 4,
-                    name: "Burger Lab",
-                    description: "Hamburger gourmet con carne 100% italiana e ingredienti freschi",
+                    name: "Quantum Burger",
+                    description: "Gourmet burgers with 100% replicated Earth beef and fresh ingredients",
                     price: 28,
                     rating: 4.6,
                     reviews: 451,
-                    location: "Piazza Dante 7",
+                    location: "Federation Plaza, Level 12",
                     image: "/api/placeholder/400/300",
                     deliveryTime: "25-40 min",
-                    menu: ["Classic Burger", "Cheese Burger", "Vegan Burger", "Patatine", "Milkshake"]
+                    menu: ["Classic Burger", "Cheese Burger", "Veggie Burger", "Root Fries", "Milkshake"]
                 }
             ],
-            frecciarossa: [
+            klingon: [
                 {
                     id: 1,
-                    name: "Frecciarossa 1000",
-                    description: "Milano Centrale - Roma Termini, diretto senza fermate intermedie",
+                    name: "Warp Transit 1000",
+                    description: "Federation HQ - Alpha Quadrant Embassy, direct non-stop service",
                     price: 89,
                     rating: 4.7,
                     reviews: 1243,
-                    departure: "Milano Centrale",
-                    arrival: "Roma Termini",
+                    departure: "Federation HQ Terminal",
+                    arrival: "Alpha Quadrant Embassy",
                     image: "/api/placeholder/400/300",
                     departureTime: "08:30",
                     arrivalTime: "11:40",
-                    features: ["Business", "Wi-Fi gratuito", "Ristorazione", "Prese elettriche", "Silenzio"]
+                    features: ["Business Class", "Free Subspace Access", "Food Replicator", "Power Stations", "Quiet Zone"]
                 },
                 {
                     id: 2,
-                    name: "Frecciarossa 1000",
-                    description: "Milano Centrale - Roma Termini, con fermate a Bologna e Firenze",
+                    name: "Warp Transit 1000",
+                    description: "Federation HQ - Alpha Quadrant Embassy, with stops at Science District and Diplomatic Quarter",
                     price: 79,
                     rating: 4.5,
                     reviews: 968,
-                    departure: "Milano Centrale",
-                    arrival: "Roma Termini",
+                    departure: "Federation HQ Terminal",
+                    arrival: "Alpha Quadrant Embassy",
                     image: "/api/placeholder/400/300",
                     departureTime: "10:15",
                     arrivalTime: "13:55",
-                    features: ["Standard", "Wi-Fi gratuito", "Bar", "Prese elettriche"]
+                    features: ["Standard Class", "Free Subspace Access", "Refreshment Station", "Power Stations"]
                 },
                 {
                     id: 3,
-                    name: "Frecciarossa 1000",
-                    description: "Milano Centrale - Roma Termini, diretto senza fermate intermedie",
+                    name: "Warp Transit 1000",
+                    description: "Federation HQ - Alpha Quadrant Embassy, direct non-stop service",
                     price: 95,
                     rating: 4.8,
                     reviews: 1432,
-                    departure: "Milano Centrale",
-                    arrival: "Roma Termini",
+                    departure: "Federation HQ Terminal",
+                    arrival: "Alpha Quadrant Embassy",
                     image: "/api/placeholder/400/300",
-                    departureTime: "12:00",
-                    arrivalTime: "15:10",
-                    features: ["Executive", "Wi-Fi gratuito", "Ristorazione al posto", "Prese elettriche", "Silenzio"]
-                },
-                {
-                    id: 4,
-                    name: "Frecciarossa 1000",
-                    description: "Milano Centrale - Roma Termini, con fermata a Firenze",
-                    price: 85,
-                    rating: 4.6,
-                    reviews: 1089,
-                    departure: "Milano Centrale",
-                    arrival: "Roma Termini",
-                    image: "/api/placeholder/400/300",
-                    departureTime: "14:30",
-                    arrivalTime: "17:55",
-                    features: ["Prima", "Wi-Fi gratuito", "Bar", "Prese elettriche", "Area break"]
-                }
-            ],
-            lufthansa: [
-                {
-                    id: 1,
-                    name: "LH1234",
-                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
-                    price: 189,
-                    rating: 4.6,
-                    reviews: 876,
-                    departure: "Milano Malpensa",
-                    arrival: "Berlino Brandenburg",
-                    image: "/api/placeholder/400/300",
-                    departureTime: "07:30",
-                    arrivalTime: "09:20",
-                    features: ["Economy", "Bagaglio a mano", "Pasto", "Intrattenimento"]
-                },
-                {
-                    id: 2,
-                    name: "LH1434",
-                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
-                    price: 249,
-                    rating: 4.7,
-                    reviews: 723,
-                    departure: "Milano Malpensa",
-                    arrival: "Berlino Brandenburg",
-                    image: "/api/placeholder/400/300",
-                    departureTime: "12:15",
-                    arrivalTime: "14:05",
-                    features: ["Economy Premium", "Bagaglio a mano", "Bagaglio da stiva 23kg", "Pasto premium"]
-                },
-                {
-                    id: 3,
-                    name: "LH5678",
-                    description: "Milano Malpensa (MXP) - Berlino (BER), con scalo a Monaco",
-                    price: 159,
-                    rating: 4.4,
-                    reviews: 542,
-                    departure: "Milano Malpensa",
-                    arrival: "Berlino Brandenburg",
-                    image: "/api/placeholder/400/300",
-                    departureTime: "16:45",
-                    arrivalTime: "19:30",
-                    features: ["Economy", "Bagaglio a mano", "Snack", "Intrattenimento"]
-                },
-                {
-                    id: 4,
-                    name: "LH8765",
-                    description: "Milano Malpensa (MXP) - Berlino (BER), volo diretto",
-                    price: 349,
-                    rating: 4.9,
-                    reviews: 1024,
-                    departure: "Milano Malpensa",
-                    arrival: "Berlino Brandenburg",
-                    image: "/api/placeholder/400/300",
-                    departureTime: "18:30",
-                    arrivalTime: "20:20",
-                    features: ["Business", "Bagaglio a mano", "Bagaglio da stiva 32kg", "Menu gourmet", "Lounge access"]
-                }
-            ]
-        };
-        
-        // DOM elements
-        const serviceTabs = document.querySelectorAll('.service-tab');
-        const serviceIcon = document.getElementById('service-icon');
-        const searchTitle = document.getElementById('search-title');
-        const aiPrompt = document.getElementById('aiPrompt');
-        const searchButton = document.getElementById('searchButton');
-        const loading = document.getElementById('loading');
-        const aiSuggestion = document.getElementById('aiSuggestion');
-        const aiUnderstanding = document.getElementById('aiUnderstanding');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const resultsTitle = document.getElementById('results-title');
-        const resultsList = document.getElementById('results-list');
-        const initialMessage = document.getElementById('initialMessage');
-        const paymentModal = document.getElementById('paymentModal');
-        const closeModal = document.getElementById('closeModal');
-        const modalTitle = document.getElementById('modal-title');
-        const itemDetails = document.getElementById('itemDetails');
-        const basePrice = document.getElementById('basePrice');
-        const taxes = document.getElementById('taxes');
-        const totalPrice = document.getElementById('totalPrice');
-        const priceLabel = document.getElementById('price-label');
-        const taxLabel = document.getElementById('tax-label');
-        const taxContainer = document.getElementById('tax-container');
-        const confirmButton = document.getElementById('confirmButton');
-        const paypalButton = document.getElementById('paypalButton');
-        const creditCardButton = document.getElementById('creditCardButton');
-        
-        // Set up event listeners
-        serviceTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Get service name from tab id
-                const service = this.id.replace('-tab', '');
-                
-                // Update current service
-                currentService = service;
-                
-                // Reset UI
-                resetUI();
-                
-                // Update UI for selected service
-                updateServiceUI(service);
-                
-                // Mark this tab as active
-                serviceTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                this.classList.add(`${service}-bg`);
-            });
-        });
-        
-        searchButton.addEventListener('click', function() {
-            // Simulate AI analysis
-            simulateAISearch();
-        });
-        
-        closeModal.addEventListener('click', function() {
-            paymentModal.classList.add('hidden');
-        });
-        
-        paypalButton.addEventListener('click', function() {
-            // Toggle selected payment method
-            this.classList.add('bg-[#0070BA]', 'text-white');
-            this.classList.remove('hover:bg-gray-50', 'bg-white');
-            creditCardButton.classList.remove('bg-blue-600', 'text-white');
-            creditCardButton.classList.add('hover:bg-gray-50', 'bg-white');
-        });
-        
-        creditCardButton.addEventListener('click', function() {
-            // Toggle selected payment method
-            this.classList.add('bg-blue-600', 'text-white');
-            this.classList.remove('hover:bg-gray-50', 'bg-white');
-            paypalButton.classList.remove('bg-[#0070BA]', 'text-white');
-            paypalButton.classList.add('hover:bg-gray-50', 'bg-white');
-        });
-        
-        confirmButton.addEventListener('click', function() {
-            // Simulate payment confirmation
-            paymentModal.classList.add('hidden');
-            
-            // Show confirmation message
-            alert('Ordine confermato con successo! Riceverai una conferma via email.');
-        });
-        
-        // Functions
-        function updateServiceUI(service) {
-            // Update icon
-            serviceIcon.className = '';
-            serviceIcon.classList.add(serviceConfig[service].icon, `${service}-color`, 'text-5xl');
-            
-            // Update title
-            searchTitle.textContent = serviceConfig[service].title;
-            
-            // Update placeholder
-            aiPrompt.placeholder = serviceConfig[service].promptPlaceholder;
-            
-            // Update search button
-            searchButton.classList.remove('bg-[#FF5A5F]', 'bg-[#FF9900]', 'bg-[#00A082]', 'bg-[#CC0033]', 'bg-[#05164D]');
-            searchButton.classList.add(`bg-[${serviceConfig[service].color}]`);
-        }
-        
-        function resetUI() {
-            // Clear AI suggestion
-            aiSuggestion.classList.add('hidden');
-            aiUnderstanding.textContent = '';
-            
-            // Hide results
-            resultsContainer.classList.add('hidden');
-            resultsList.innerHTML = '';
-            
-            // Show initial message
-            initialMessage.classList.remove('hidden');
-            
-            // Clear prompt
-            aiPrompt.value = '';
-        }
-        
-        function simulateAISearch() {
-            // Show loading
-            loading.classList.remove('hidden');
-            
-            // Hide initial message
-            initialMessage.classList.add('hidden');
-            
-            // Simulate API delay
-            setTimeout(() => {
-                // Hide loading
-                loading.classList.add('hidden');
-                
-                // Show AI suggestion
-                aiSuggestion.classList.remove('hidden');
-                
-                // Parse user request (simplified for demo)
-                const userRequest = aiPrompt.value || "Richiesta generica";
-                
-                // Generate understanding based on service
-                let understanding;
-                switch(currentService) {
-                    case 'airbnb':
-                        understanding = "Stai cercando un alloggio a Firenze in zona centrale per 2 persone con terrazza.";
-                        break;
-                    case 'amazon':
-                        understanding = "Stai cercando un laptop per lavoro grafico con budget massimo di 1000€ e SSD capiente.";
-                        break;
-                    case 'glovo':
-                        understanding = "Vuoi ordinare una pizza margherita e un tiramisù con consegna entro un'ora.";
-                        break;
-                    case 'frecciarossa':
-                        understanding = "Cerchi un treno da Milano a Roma per domani mattina in prima classe.";
-                        break;
-                    case 'lufthansa':
-                        understanding = "Stai cercando un volo Milano-Berlino per il prossimo weekend con bagaglio a mano.";
-                        break;
-                    default:
-                        understanding = "Ho analizzato la tua richiesta.";
-                }
-                aiUnderstanding.textContent = understanding;
-                
-                // Show results
-                showResults();
-                
-            }, 1500);
-        }
-        
-        function showResults() {
-            // Update results title
-            resultsTitle.textContent = serviceConfig[currentService].resultTitle;
-            
-            // Show results container
-            resultsContainer.classList.remove('hidden');
-            
-            // Get mock data for current service
-            const serviceData = mockData[currentService];
-            
-            // Clear previous results
-            resultsList.innerHTML = '';
-            
-            // Add results
-            serviceData.forEach(item => {
-                const resultCard = createResultCard(item);
-                resultsList.appendChild(resultCard);
-            });
-        }
-        
-        function createResultCard(item) {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all';
-            
-            // Determine item specific content
-            let specificContent = '';
-            let itemFeatures = '';
-            
-            if (item.features && Array.isArray(item.features)) {
-                itemFeatures = `
-                    <div class="mt-2 flex flex-wrap gap-2">
-                        ${item.features.map(feature => `
-                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">${feature}</span>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            switch(currentService) {
-                case 'airbnb':
-                    specificContent = `
-                        <div class="text-sm text-gray-600 mt-1">
-                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.location}
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <i class="fas fa-user mr-1"></i> Host: ${item.host}
-                        </div>
-                    `;
-                    break;
-                case 'amazon':
-                    specificContent = `
-                        <div class="text-sm text-gray-600 mt-1">
-                            <i class="fas fa-store mr-1"></i> Venditore: ${item.seller}
-                        </div>
-                    `;
-                    break;
-                case 'glovo':
-                    specificContent = `
-                        <div class="text-sm text-gray-600 mt-1">
-                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.location}
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <i class="fas fa-clock mr-1"></i> Consegna: ${item.deliveryTime}
-                        </div>
-                        <div class="mt-2">
-                            <span class="text-sm font-semibold">Menu: </span>
-                            <span class="text-sm text-gray-600">${item.menu.slice(0, 3).join(', ')}${item.menu.length > 3 ? '...' : ''}</span>
-                        </div>
-                    `;
-                    break;
-                case 'frecciarossa':
-                case 'lufthansa':
-                    specificContent = `
-                        <div class="text-sm text-gray-600 mt-1">
-                            <i class="fas fa-map-marker-alt mr-1"></i> ${item.departure} → ${item.arrival}
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <i class="fas fa-clock mr-1"></i> ${item.departureTime} - ${item.arrivalTime}
-                        </div>
-                    `;
-                    break;
-            }
-            
-            card.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold">${item.name}</h3>
-                    <div class="flex items-center mt-1 mb-2">
-                        <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                        <span class="font-medium">${item.rating}</span>
-                        <span class="text-gray-400 text-sm ml-1">(${item.reviews})</span>
-                    </div>
-                    <p class="text-gray-600 text-sm mb-3">${item.description}</p>
-                    
-                    ${specificContent}
-                    
-                    ${itemFeatures}
-                    
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-xl font-bold">${item.price}€</span>
-                        <button class="book-button px-4 py-2 rounded-lg text-white font-medium" 
-                                style="background-color: ${serviceConfig[currentService].color}"
-                                data-id="${item.id}">
-                            ${currentService === 'amazon' ? 'Acquista' : 'Prenota'}
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // Add event listener to book button
-            const bookButton = card.querySelector('.book-button');
-            bookButton.addEventListener('click', function() {
-                openPaymentModal(item);
-            });
-            
-            return card;
-        }
-        
-        function openPaymentModal(item) {
-            // Update modal title
-            modalTitle.textContent = serviceConfig[currentService].modalTitle;
-            
-            // Calculate prices
-            const tax = Math.round(item.price * 0.12);
-            const total = item.price + (serviceConfig[currentService].showTax ? tax : 0);
-            
-            // Update price labels
-            priceLabel.textContent = serviceConfig[currentService].priceLabel;
-            taxLabel.textContent = serviceConfig[currentService].taxLabel;
-            
-            // Show/hide tax container
-            if (serviceConfig[currentService].showTax) {
-                taxContainer.classList.remove('hidden');
-            } else {
-                taxContainer.classList.add('hidden');
-            }
-            
-            // Update prices
-            basePrice.textContent = `${item.price}€`;
-            taxes.textContent = `${tax}€`;
-            totalPrice.textContent = `${total}€`;
-            
-            // Update item details
-            let detailsContent = '';
-            
-            switch(currentService) {
-                case 'airbnb':
-                    detailsContent = `
-                        <div class="flex items-start">
-                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <p class="text-sm text-gray-600">${item.location}</p>
-                                <p class="text-sm text-gray-600">Host: ${item.host}</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p class="text-sm font-semibold">Date:</p>
-                            <p class="text-sm text-gray-600">Check-in: 01/05/2025 - Check-out: 03/05/2025</p>
-                        </div>
-                    `;
-                    break;
-                case 'amazon':
-                    detailsContent = `
-                        <div class="flex items-start">
-                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <p class="text-sm text-gray-600">Venditore: ${item.seller}</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p class="text-sm font-semibold">Consegna stimata:</p>
-                            <p class="text-sm text-gray-600">Entro 2-3 giorni lavorativi</p>
-                        </div>
-                    `;
-                    break;
-                case 'glovo':
-                    detailsContent = `
-                        <div class="flex items-start">
-                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <p class="text-sm text-gray-600">${item.location}</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p class="text-sm font-semibold">Consegna stimata:</p>
-                            <p class="text-sm text-gray-600">${item.deliveryTime}</p>
-                            <p class="text-sm font-semibold mt-2">Ordine:</p>
-                            <p class="text-sm text-gray-600">${item.menu.slice(0, 3).join(', ')}</p>
-                        </div>
-                    `;
-                    break;
-                case 'frecciarossa':
-                    detailsContent = `
-                        <div class="flex items-start">
-                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <p class="text-sm text-gray-600">${item.departure} → ${item.arrival}</p>
-                                <p class="text-sm text-gray-600">${item.departureTime} - ${item.arrivalTime}</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p class="text-sm font-semibold">Data:</p>
-                            <p class="text-sm text-gray-600">01/05/2025</p>
-                            <p class="text-sm font-semibold mt-2">Passeggeri:</p>
-                            <p class="text-sm text-gray-600">1 adulto</p>
-                        </div>
-                    `;
-                    break;
-                case 'lufthansa':
-                    detailsContent = `
-                        <div class="flex items-start">
-                            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="font-semibold">${item.name}</h4>
-                                <p class="text-sm text-gray-600">${item.departure} → ${item.arrival}</p>
-                                <p class="text-sm text-gray-600">${item.departureTime} - ${item.arrivalTime}</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 mr-1"><i class="fas fa-star"></i></span>
-                                    <span class="text-sm">${item.rating} (${item.reviews})</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <p class="text-sm font-semibold">Data:</p>
-                            <p class="text-sm text-gray-600">01/05/2025</p>
-                            <p class="text-sm font-semibold mt-2">Passeggeri:</p>
-                            <p class="text-sm text-gray-600">1 adulto</p>
-                            <p class="text-sm font-semibold mt-2">Bagaglio:</p>
-                            <p class="text-sm text-gray-600">1 bagaglio a mano</p>
-                        </div>
-                    `;
-                    break;
-            }
-            
-            itemDetails.innerHTML = detailsContent;
-            
-            // Show modal
-            paymentModal.classList.remove('hidden');
-        }
-        
-        // Initialize the UI with the default service (airbnb)
-        updateServiceUI(currentService);
-    </script>
-</body>
-</html>
+                    departureTime: "12:00

@@ -567,3 +567,356 @@
                     arrival: "Alpha Quadrant Embassy",
                     image: "/api/placeholder/400/300",
                     departureTime: "12:00
+
+                    id: 3,
+                    name: "Warp Transit 1000",
+                    description: "Federation HQ - Alpha Quadrant Embassy, direct non-stop service",
+                    price: 95,
+                    rating: 4.8,
+                    reviews: 1432,
+                    departure: "Federation HQ Terminal",
+                    arrival: "Alpha Quadrant Embassy",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "12:00",
+                    arrivalTime: "14:45",
+                    features: ["Executive Class", "Priority Boarding", "Gourmet Replicator", "Private Cabin", "Communications Suite"]
+                },
+                {
+                    id: 4,
+                    name: "Warp Transit 1000",
+                    description: "Federation HQ - Alpha Quadrant Embassy, express service with one stop at Diplomatic Quarter",
+                    price: 85,
+                    rating: 4.6,
+                    reviews: 1107,
+                    departure: "Federation HQ Terminal",
+                    arrival: "Alpha Quadrant Embassy",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "14:30",
+                    arrivalTime: "17:15",
+                    features: ["Business Class", "Free Subspace Access", "Food Replicator", "Power Stations", "Quiet Zone"]
+                }
+            ],
+            vulcan: [
+                {
+                    id: 1,
+                    name: "Mars Direct Shuttle",
+                    description: "Earth Orbital Station - Mars Colony, non-stop quantum slipstream service",
+                    price: 1250,
+                    rating: 4.8,
+                    reviews: 752,
+                    departure: "Earth Orbital Station",
+                    arrival: "Olympus Mons Terminal, Mars",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "08:00 Earth Standard",
+                    arrivalTime: "10:30 Mars Standard",
+                    features: ["First Class", "Zero-G Suite", "Quantum Replicator", "Viewing Deck", "Medical Bay"]
+                },
+                {
+                    id: 2,
+                    name: "Red Planet Explorer",
+                    description: "Earth Orbital Station - Mars Colony, with stop at Phobos Research Station",
+                    price: 1150,
+                    rating: 4.7,
+                    reviews: 683,
+                    departure: "Earth Orbital Station",
+                    arrival: "Olympus Mons Terminal, Mars",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "12:15 Earth Standard",
+                    arrivalTime: "15:45 Mars Standard",
+                    features: ["Business Class", "Gravity Control", "Standard Replicator", "Viewing Lounge", "Medical Station"]
+                },
+                {
+                    id: 3,
+                    name: "Mars Express",
+                    description: "Earth Orbital Station - Mars Colony, non-stop warp service",
+                    price: 1350,
+                    rating: 4.9,
+                    reviews: 892,
+                    departure: "Earth Orbital Station",
+                    arrival: "Olympus Mons Terminal, Mars",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "16:30 Earth Standard",
+                    arrivalTime: "19:00 Mars Standard",
+                    features: ["Executive Class", "Luxury Suite", "Gourmet Replicator", "Private Observation Deck", "Full Medical Bay"]
+                },
+                {
+                    id: 4,
+                    name: "Economy Mars Shuttle",
+                    description: "Earth Orbital Station - Mars Colony, with stops at Moon Base and Phobos",
+                    price: 950,
+                    rating: 4.5,
+                    reviews: 576,
+                    departure: "Earth Orbital Station",
+                    arrival: "Olympus Mons Terminal, Mars",
+                    image: "/api/placeholder/400/300",
+                    departureTime: "20:45 Earth Standard",
+                    arrivalTime: "01:15 Mars Standard",
+                    features: ["Standard Class", "Basic Amenities", "Food Synthesizer", "Shared Viewing Port", "Medical Kit"]
+                }
+            ]
+        };
+        
+        // Function to update UI based on selected service
+        function updateServiceUI(service) {
+            currentService = service;
+            const config = serviceConfig[service];
+            
+            // Update icon and colors
+            document.getElementById('service-icon').className = `${config.icon} text-5xl`;
+            document.getElementById('service-icon').style.color = config.color;
+            document.getElementById('search-title').textContent = config.title;
+            document.getElementById('search-title').style.color = config.color;
+            document.getElementById('aiPrompt').placeholder = config.promptPlaceholder;
+            document.getElementById('searchButton').style.backgroundColor = config.color;
+            
+            // Reset search UI
+            document.getElementById('aiSuggestion').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('initialMessage').classList.remove('hidden');
+            document.getElementById('aiPrompt').value = '';
+            
+            // Update active tab styling
+            document.querySelectorAll('.service-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.remove('starfleet-bg', 'klingon-bg', 'ferengi-bg', 'romulan-bg', 'vulcan-bg');
+            });
+            
+            document.getElementById(`${service}-tab`).classList.add('active');
+            document.getElementById(`${service}-tab`).classList.add(`${service}-bg`);
+        }
+        
+        // Function to display AI understanding
+        function showAIUnderstanding(understanding) {
+            const aiUnderstandingEl = document.getElementById('aiUnderstanding');
+            aiUnderstandingEl.textContent = understanding;
+            document.getElementById('aiSuggestion').classList.remove('hidden');
+        }
+        
+        // Function to display search results
+        function displayResults(results) {
+            const config = serviceConfig[currentService];
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsList = document.getElementById('results-list');
+            const resultsTitle = document.getElementById('results-title');
+            
+            // Update title
+            resultsTitle.textContent = config.resultTitle;
+            
+            // Clear previous results
+            resultsList.innerHTML = '';
+            
+            // Create result cards
+            results.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'lcars-panel rounded-lg overflow-hidden card-hover transition-all duration-300';
+                
+                let features = '';
+                if (item.features && Array.isArray(item.features)) {
+                    features = `
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            ${item.features.map(feature => `
+                                <span class="px-2 py-1 bg-[#0A1622] rounded-md text-xs">${feature}</span>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                let locationInfo = '';
+                if (item.location) {
+                    locationInfo = `<div class="text-sm text-[#8BA5C4] mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${item.location}</div>`;
+                } else if (item.departure && item.arrival) {
+                    locationInfo = `
+                        <div class="text-sm text-[#8BA5C4] mt-1">
+                            <div><i class="fas fa-plane-departure mr-1"></i> ${item.departure}</div>
+                            <div><i class="fas fa-plane-arrival mr-1"></i> ${item.arrival}</div>
+                        </div>
+                    `;
+                }
+                
+                let additionalInfo = '';
+                if (item.host) {
+                    additionalInfo = `<div class="text-sm text-[#8BA5C4]"><i class="fas fa-user mr-1"></i> Host: ${item.host}</div>`;
+                } else if (item.seller) {
+                    additionalInfo = `<div class="text-sm text-[#8BA5C4]"><i class="fas fa-store mr-1"></i> Seller: ${item.seller}</div>`;
+                } else if (item.deliveryTime) {
+                    additionalInfo = `<div class="text-sm text-[#8BA5C4]"><i class="fas fa-clock mr-1"></i> Delivery: ${item.deliveryTime}</div>`;
+                } else if (item.departureTime && item.arrivalTime) {
+                    additionalInfo = `
+                        <div class="text-sm text-[#8BA5C4]">
+                            <i class="fas fa-clock mr-1"></i> ${item.departureTime} - ${item.arrivalTime}
+                        </div>
+                    `;
+                }
+                
+                // Generate card HTML based on item properties
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">${item.name}</h3>
+                        <p class="text-sm text-[#8BA5C4] mb-2">${item.description}</p>
+                        
+                        ${locationInfo}
+                        ${additionalInfo}
+                        
+                        <div class="flex items-center mt-2">
+                            <div class="text-[#FFD700]">
+                                ${'★'.repeat(Math.floor(item.rating))}${item.rating % 1 >= 0.5 ? '½' : ''}
+                            </div>
+                            <span class="text-sm text-[#8BA5C4] ml-2">${item.rating} (${item.reviews})</span>
+                        </div>
+                        
+                        ${features}
+                        
+                        <div class="flex justify-between items-center mt-4">
+                            <div>
+                                <span class="text-lg font-bold" style="color: ${config.color}">${item.price}</span>
+                                <span class="text-[#8BA5C4] text-sm">credits</span>
+                            </div>
+                            <button class="select-item-btn px-4 py-2 rounded" style="background-color: ${config.color}; color: #0C1013;" 
+                                data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                resultsList.appendChild(card);
+            });
+            
+            // Show results and hide initial message
+            resultsContainer.classList.remove('hidden');
+            document.getElementById('initialMessage').classList.add('hidden');
+            
+            // Add event listeners to select buttons
+            document.querySelectorAll('.select-item-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const itemId = btn.getAttribute('data-id');
+                    const itemName = btn.getAttribute('data-name');
+                    const itemPrice = btn.getAttribute('data-price');
+                    openModal(itemId, itemName, itemPrice);
+                });
+            });
+        }
+        
+        // Function to open payment modal
+        function openModal(itemId, itemName, itemPrice) {
+            const config = serviceConfig[currentService];
+            const modal = document.getElementById('paymentModal');
+            
+            // Set modal title
+            document.getElementById('modal-title').textContent = config.modalTitle;
+            
+            // Calculate prices
+            const basePrice = parseFloat(itemPrice);
+            const taxRate = 0.08;
+            const tax = basePrice * taxRate;
+            const total = basePrice + tax;
+            
+            // Update modal content
+            document.getElementById('itemDetails').innerHTML = `
+                <div class="p-4 bg-[#0A1622] rounded-lg">
+                    <h4 class="font-bold mb-2">${itemName}</h4>
+                    <p class="text-sm text-[#8BA5C4]">Item #${itemId}</p>
+                </div>
+            `;
+            
+            document.getElementById('price-label').textContent = config.priceLabel;
+            document.getElementById('basePrice').textContent = `${basePrice} credits`;
+            document.getElementById('tax-label').textContent = config.taxLabel;
+            document.getElementById('taxes').textContent = `${tax.toFixed(2)} credits`;
+            document.getElementById('totalPrice').textContent = `${total.toFixed(2)} credits`;
+            
+            // Toggle tax display
+            if (config.showTax) {
+                document.getElementById('tax-container').classList.remove('hidden');
+            } else {
+                document.getElementById('tax-container').classList.add('hidden');
+            }
+            
+            // Show modal
+            modal.classList.remove('hidden');
+        }
+        
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+        
+        // Function to handle search request and API call with simulated response
+        async function handleSearch() {
+            const query = document.getElementById('aiPrompt').value.trim();
+            
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('loading').classList.remove('hidden');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Hide loading indicator
+                document.getElementById('loading').classList.add('hidden');
+                
+                // Generate simulated AI understanding
+                const understandings = {
+                    starfleet: "You're looking for accommodations near Federation Headquarters for 2 crew members. I'll search for suitable quarters with your specified requirements.",
+                    ferengi: "You need a high-performance data PADD with extended memory capacity. I'll search for devices meeting your tech requirements.",
+                    romulan: "You'd like to order Vulcan plomeek soup and Earth tiramisu dessert. I'll find restaurants that can provide these items.",
+                    klingon: "You need transport from Federation HQ to Alpha Quadrant Embassy tomorrow morning. I'll search for available ground transport options.",
+                    vulcan: "You're requesting a shuttle from Earth to Mars colony next weekend with minimal luggage. I'll find suitable orbital shuttles matching your criteria."
+                };
+                
+                // Display AI understanding
+                showAIUnderstanding(understandings[currentService]);
+                
+                // Display search results from mock data
+                displayResults(mockData[currentService]);
+            }, 1500);
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Service tab selection
+            document.getElementById('starfleet-tab').addEventListener('click', () => updateServiceUI('starfleet'));
+            document.getElementById('ferengi-tab').addEventListener('click', () => updateServiceUI('ferengi'));
+            document.getElementById('romulan-tab').addEventListener('click', () => updateServiceUI('romulan'));
+            document.getElementById('klingon-tab').addEventListener('click', () => updateServiceUI('klingon'));
+            document.getElementById('vulcan-tab').addEventListener('click', () => updateServiceUI('vulcan'));
+            
+            // Search button
+            document.getElementById('searchButton').addEventListener('click', handleSearch);
+            
+            // Submit on Enter key
+            document.getElementById('aiPrompt').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            // Modal controls
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            document.getElementById('confirmButton').addEventListener('click', () => {
+                closeModal();
+                alert('Transaction successful! Your request has been processed.');
+            });
+            
+            // Payment method selection
+            document.getElementById('paypalButton').addEventListener('click', function() {
+                document.getElementById('paypalButton').classList.add('bg-[#5EADFC]', 'text-[#0C1013]');
+                document.getElementById('paypalButton').classList.remove('hover:bg-[#0A1622]');
+                document.getElementById('creditCardButton').classList.remove('bg-[#5EADFC]', 'text-[#0C1013]');
+                document.getElementById('creditCardButton').classList.add('hover:bg-[#0A1622]');
+            });
+            
+            document.getElementById('creditCardButton').addEventListener('click', function() {
+                document.getElementById('creditCardButton').classList.add('bg-[#5EADFC]', 'text-[#0C1013]');
+                document.getElementById('creditCardButton').classList.remove('hover:bg-[#0A1622]');
+                document.getElementById('paypalButton').classList.remove('bg-[#5EADFC]', 'text-[#0C1013]');
+                document.getElementById('paypalButton').classList.add('hover:bg-[#0A1622]');
+            });
+        });
+    </script>
+</body>
+</html>
